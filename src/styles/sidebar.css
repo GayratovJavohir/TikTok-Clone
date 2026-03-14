@@ -1,0 +1,229 @@
+.tiktok-sidebar-left {
+    width: 240px;
+    min-width: 240px;
+    height: 100vh;
+    background: #000;
+    color: #fff;
+    padding: 20px 14px;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.25s ease, min-width 0.25s ease;
+    border-right: 1px solid #222;
+}
+
+/* COLLAPSED STATE */
+.tiktok-sidebar-left.collapsed {
+    width: 72px;
+    min-width: 72px;
+}
+
+/* Header */
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tiktok-icon {
+    width: 32px;
+    height: 32px;
+}
+
+.tiktok-logo {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+/* Search */
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #111;
+    padding: 8px 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.search-box input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    width: 100%;
+}
+
+.search-icon {
+    font-size: 14px;
+}
+
+/* Nav */
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+}
+
+.nav-item:hover {
+    background: #111;
+}
+
+.nav-item.active {
+    background: #1a1a1a;
+}
+
+.nav-icon {
+    font-size: 20px;
+}
+
+.nav-label {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.search-box-wrapper {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #111;
+    padding: 8px 10px;
+    border-radius: 8px;
+}
+
+.search-box input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    width: 100%;
+    font-size: 14px;
+}
+
+.search-results-popup {
+    position: absolute;
+    top: 0;
+    left: calc(100% + 30px);
+    width: 320px;
+    max-height: 420px;
+    overflow-y: auto;
+    background: #0f0f0f;
+    border: 1px solid #262626;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    padding: 8px;
+    z-index: 999;
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.search-result-item:hover {
+    background: #1a1a1a;
+}
+
+.search-result-avatar img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.search-result-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.search-result-username {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.search-result-name {
+    font-size: 12px;
+    color: #9f9f9f;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-empty {
+    padding: 14px 12px;
+    color: #aaa;
+    font-size: 13px;
+}
+
+/* Collapsed nav align center */
+.tiktok-sidebar-left.collapsed .nav-item {
+    justify-content: center;
+}
+
+.tiktok-sidebar-left.collapsed .nav-label {
+    display: none;
+}
+
+.tiktok-sidebar-left.collapsed .search-box,
+.tiktok-sidebar-left.collapsed .following-section,
+.tiktok-sidebar-left.collapsed .footer-section,
+.tiktok-sidebar-left.collapsed .tiktok-logo {
+    display: none;
+}
+
+/* Following */
+.following-section {
+    margin-top: auto;
+    margin-bottom: 20px;
+}
+
+.following-section h4 {
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.following-section p {
+    font-size: 12px;
+    color: #aaa;
+}
+
+/* Footer */
+.footer-section p {
+    font-size: 12px;
+    color: #777;
+    margin-bottom: 4px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .tiktok-sidebar-left {
+        display: none;
+    }
+}

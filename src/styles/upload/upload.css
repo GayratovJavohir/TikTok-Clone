@@ -1,0 +1,8 @@
+.upload-content {
+    margin-left: 240px;
+    padding-top: 56px;
+    padding: 24px;
+    background: #f8f8f8;
+    min-height: 100vh;
+    overflow-y: auto;
+}

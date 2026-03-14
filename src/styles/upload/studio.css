@@ -1,0 +1,231 @@
+.studio-page {
+    margin-top: 30px;
+    padding-top: 56px;
+    padding: 24px;
+    background: #f8f8f8;
+    max-height: 100px;
+}
+
+/* Profile */
+.studio-profile {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    border: 1px solid #eee;
+}
+
+.studio-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+}
+
+.studio-profile h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #8a8a8a;
+}
+
+.studio-profile p {
+    margin: 4px 0 0;
+    font-size: 14px;
+    color: #8a8a8a;
+}
+
+/* Card */
+.studio-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #eee;
+}
+
+.studio-card h4 {
+    color: #8a8a8a;
+}
+
+/* Card header */
+.studio-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.studio-card-header h4 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.studio-card-header select {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+/* Metrics */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+}
+
+.metric-box {
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    background: #fafafa;
+}
+
+.metric-title {
+    font-size: 13px;
+    color: #6b6b6b;
+}
+
+.metric-value {
+    display: block;
+    font-size: 22px;
+    font-weight: 600;
+    margin: 6px 0;
+}
+
+.metric-sub {
+    font-size: 12px;
+    color: #aaa;
+}
+
+/* Chart placeholder */
+.chart-placeholder {
+    margin-top: 20px;
+    height: 180px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #f1f1f2, #fafafa);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 14px;
+}
+
+/* Bottom */
+.studio-bottom {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+.empty {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 14px;
+}
+
+/* Knowledge */
+.knowledge-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+}
+
+.knowledge-item h5 {
+    margin: 0 0 6px;
+    font-size: 14px;
+}
+
+.knowledge-item p {
+    margin: 0;
+    font-size: 13px;
+    color: #8a8a8a;
+}
+
+.knowledge-item img {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+
+.posts-grid {
+    display: flex;
+    gap: 12px;
+    flex-direction: column;
+}
+
+.tiktok-post-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.tiktok-post-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.tiktok-post-info h5 {
+    font-size: 16px;
+    color: #000;
+    font-weight: 400;
+
+}
+
+.tiktok-post-info p {
+    font-size: 14px;
+    color: #8a8a8a;
+    margin: 0;
+}
+
+.tiktok-post {
+    position: relative;
+    width: 60px;
+    height: 90px;
+    aspect-ratio: 9 / 16;
+    border-radius: 5px;
+    overflow: hidden;
+    background: #000;
+    cursor: pointer;
+    display: flex;
+}
+
+.tiktok-post img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.tiktok-post-stats {
+    display: flex;
+    margin-left: 300px;
+    align-items: center;
+    gap: 30px;
+}
+
+.tiktok-post-stats .stats-heart {
+    color: red;
+}
+
+.tiktok-post-stats .stats-comment {
+    color: #6b6b6b;
+}
+
+.tiktok-post-stats span {
+    color: #8a8a8a;
+}
+
+.tiktok-post-stats span {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
