@@ -98,8 +98,7 @@ export default function StudioUpload() {
             if (musicId?.toString().trim()) fd.append("music", musicId);
             if (hashtagId?.toString().trim()) fd.append("hashtag", hashtagId);
 
-            // author_id kerak emas (token orqali backend save qiladi)
-            // fd.append("author_id", Number(userId));
+            if (userId) fd.append("author_id", Number(userId));
         }
 
         // STORY bo'lsa backendda faqat image/video + expires_at backend set qiladi (perform_create)
