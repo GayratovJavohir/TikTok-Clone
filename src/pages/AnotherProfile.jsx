@@ -36,7 +36,7 @@ export default function Profile() {
         setLoading(true);
         setSelectedPost(null);
 
-        fetch(`http://localhost:8000/users/another-profile/${profileId}/`, {
+        fetch(`https://tiktok-clone-backend-hb85.onrender.com/users/another-profile/${profileId}/`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -71,7 +71,7 @@ export default function Profile() {
         : profile?.avatar
             ? profile.avatar.startsWith("http")
                 ? profile.avatar
-                : `http://localhost:8000${profile.avatar}`
+                : `https://tiktok-clone-backend-hb85.onrender.com${profile.avatar}`
             : Profile_Pic;
 
     const handleFollow = async () => {
@@ -81,7 +81,7 @@ export default function Profile() {
         const method = isFollowing ? "DELETE" : "POST";
 
         const res = await fetch(
-            `http://localhost:8000/users/follow/${profileId}/`,
+            `https://tiktok-clone-backend-hb85.onrender.com/users/follow/${profileId}/`,
             {
                 method,
                 headers: {
@@ -124,14 +124,14 @@ export default function Profile() {
                         <div className="video-thumbnail">
                             {post.video ? (
                                 <video
-                                    src={`http://localhost:8000${post.video}`}
+                                    src={`https://tiktok-clone-backend-hb85.onrender.com${post.video}`}
                                     muted
                                     loop
                                     playsInline
                                 />
                             ) : post.image ? (
                                 <img
-                                    src={`http://localhost:8000${post.image}`}
+                                    src={`https://tiktok-clone-backend-hb85.onrender.com${post.image}`}
                                     alt={post.title}
                                 />
                             ) : (

@@ -53,7 +53,7 @@ export default function ProfileFeed({ post, onClose }) {
         try {
             const token = localStorage.getItem("access_token")
             const res = await axios.get(
-                `http://localhost:8000/posts/comments/?post=${postId}`,
+                `https://tiktok-clone-backend-hb85.onrender.com/posts/comments/?post=${postId}`,
                 {
                     headers: token ? { Authorization: `Bearer ${token}` } : {}
                 }
@@ -94,7 +94,7 @@ export default function ProfileFeed({ post, onClose }) {
 
         try {
             const res = await axios.post(
-                `http://localhost:8000/posts/posts/${currentPost.id}/like_toggle/`,
+                `https://tiktok-clone-backend-hb85.onrender.com/posts/posts/${currentPost.id}/like_toggle/`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             )
@@ -130,7 +130,7 @@ export default function ProfileFeed({ post, onClose }) {
 
         try {
             const res = await axios.post(
-                `http://localhost:8000/posts/posts/${currentPost.id}/save_toggle/`,
+                `https://tiktok-clone-backend-hb85.onrender.com/posts/posts/${currentPost.id}/save_toggle/`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             )
@@ -178,7 +178,7 @@ export default function ProfileFeed({ post, onClose }) {
 
         try {
             const res = await axios.post(
-                "http://localhost:8000/posts/comments/",
+                "https://tiktok-clone-backend-hb85.onrender.com/posts/comments/",
                 {
                     post: currentPost.id,
                     text: fake.text
@@ -240,7 +240,7 @@ export default function ProfileFeed({ post, onClose }) {
 
         try {
             const res = await axios.post(
-                "http://localhost:8000/posts/reply_comments/",
+                "https://tiktok-clone-backend-hb85.onrender.com/posts/reply_comments/",
                 {
                     parent_comment: commentId,
                     text: textWithMention
@@ -308,7 +308,7 @@ export default function ProfileFeed({ post, onClose }) {
 
         try {
             const res = await axios.post(
-                `http://localhost:8000/posts/reply_comments/${replyId}/like_toggle/`,
+                `https://tiktok-clone-backend-hb85.onrender.com/posts/reply_comments/${replyId}/like_toggle/`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             )
@@ -356,7 +356,7 @@ export default function ProfileFeed({ post, onClose }) {
 
         try {
             const res = await axios.post(
-                `http://localhost:8000/posts/comments/${commentId}/like_toggle/`,
+                `https://tiktok-clone-backend-hb85.onrender.com/posts/comments/${commentId}/like_toggle/`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             )
@@ -403,7 +403,7 @@ export default function ProfileFeed({ post, onClose }) {
                     <div className="video-player">
                         {currentPost.video ? (
                             <video
-                                src={`http://localhost:8000${currentPost.video}`}
+                                src={`https://tiktok-clone-backend-hb85.onrender.com${currentPost.video}`}
                                 controls
                                 autoPlay
                                 playsInline
@@ -411,7 +411,7 @@ export default function ProfileFeed({ post, onClose }) {
                             />
                         ) : currentPost.image ? (
                             <img
-                                src={`http://localhost:8000${currentPost.image}`}
+                                src={`https://tiktok-clone-backend-hb85.onrender.com${currentPost.image}`}
                                 alt={currentPost.title}
                             />
                         ) : (

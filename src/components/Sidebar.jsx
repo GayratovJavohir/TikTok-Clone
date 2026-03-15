@@ -39,7 +39,7 @@ export default function Sidebar() {
             }
 
             const res = await axios.get(
-                `http://127.0.0.1:8000/users/users/?search=${search}`
+                `https://tiktok-clone-backend-hb85.onrender.com/users/users/?search=${search}`
             )
 
             setUsers(res.data.results || res.data || [])

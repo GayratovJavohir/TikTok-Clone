@@ -6,8 +6,8 @@ import { Send, Smile } from 'lucide-react'
 import '../styles/messages.css'
 import Layout from '../components/Layout'
 
-const API_BASE = 'http://127.0.0.1:8000'
-const WS_BASE = 'ws://127.0.0.1:8000'
+const API_BASE = 'https://tiktok-clone-backend-hb85.onrender.com'
+const WS_BASE = 'https://tiktok-clone-backend-hb85.onrender.com'
 
 const parseJwt = (token) => {
     try {

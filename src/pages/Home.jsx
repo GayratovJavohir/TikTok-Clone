@@ -8,7 +8,7 @@ import "../styles/pages.css"
 import { useNavigate } from "react-router-dom"
 import { useDoubleTap } from "use-double-tap"
 
-const API = "http://localhost:8000"
+const API = "https://tiktok-clone-backend-hb85.onrender.com"
 
 export default function Home() {
     const navigate = useNavigate()
@@ -60,7 +60,7 @@ export default function Home() {
             const token = localStorage.getItem("access_token")
 
             await axios.post(
-                "http://127.0.0.1:8000/chat/messages/",
+                "https://tiktok-clone-backend-hb85.onrender.com/chat/messages/",
                 {
                     room: Number(roomId),
                     text: post.caption || post.title || "Shared post",

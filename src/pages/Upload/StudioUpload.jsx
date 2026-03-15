@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../../styles/upload/studioUpload.css";
 
-const API_BASE = "http://localhost:8000";
+const API_BASE = "https://tiktok-clone-backend-hb85.onrender.com";
 
 // JWT token decode
 const parseJwt = (token) => {

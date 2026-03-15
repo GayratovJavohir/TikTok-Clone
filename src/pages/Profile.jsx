@@ -35,7 +35,7 @@ export default function Profile() {
         const token = localStorage.getItem("access_token");
         if (!token) return;
 
-        fetch("http://localhost:8000/users/profile/", {
+        fetch("https://tiktok-clone-backend-hb85.onrender.com/users/profile/", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -74,7 +74,7 @@ export default function Profile() {
         : profile?.avatar
             ? profile.avatar.startsWith("http")
                 ? profile.avatar
-                : `http://localhost:8000${profile.avatar}`
+                : `https://tiktok-clone-backend-hb85.onrender.com${profile.avatar}`
             : Profile_Pic;
 
     useEffect(() => {
@@ -84,7 +84,7 @@ export default function Profile() {
         const token = localStorage.getItem("access_token");
         if (!token) return;
 
-        fetch("http://localhost:8000/posts/posts/?saved=true", {
+        fetch("https://tiktok-clone-backend-hb85.onrender.com/posts/posts/?saved=true", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -117,7 +117,7 @@ export default function Profile() {
 
         const newValue = !isPrivate;
 
-        const res = await fetch("http://localhost:8000/users/profile/", {
+        const res = await fetch("https://tiktok-clone-backend-hb85.onrender.com/users/profile/", {
             method: "PATCH",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -147,7 +147,7 @@ export default function Profile() {
         const token = localStorage.getItem("access_token");
         if (!token) return;
 
-        fetch("http://localhost:8000/posts/posts/?liked=true", {
+        fetch("https://tiktok-clone-backend-hb85.onrender.com/posts/posts/?liked=true", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -181,7 +181,7 @@ export default function Profile() {
         const token = localStorage.getItem("access_token");
         if (!token) return;
 
-        fetch("http://localhost:8000/posts/posts/?reposts=true", {
+        fetch("https://tiktok-clone-backend-hb85.onrender.com/posts/posts/?reposts=true", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -234,7 +234,7 @@ export default function Profile() {
         if (formData.bio) fd.append("bio", formData.bio);
         if (formData.avatar) fd.append("avatar", formData.avatar);
 
-        const res = await fetch("http://localhost:8000/users/profile/", {
+        const res = await fetch("https://tiktok-clone-backend-hb85.onrender.com/users/profile/", {
             method: "PATCH",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -275,14 +275,14 @@ export default function Profile() {
                         <div className="video-thumbnail">
                             {post.video ? (
                                 <video
-                                    src={`http://localhost:8000${post.video}`}
+                                    src={`https://tiktok-clone-backend-hb85.onrender.com${post.video}`}
                                     muted
                                     loop
                                     playsInline
                                 />
                             ) : post.image ? (
                                 <img
-                                    src={`http://localhost:8000${post.image}`}
+                                    src={`https://tiktok-clone-backend-hb85.onrender.com${post.image}`}
                                     alt={post.title}
                                 />
                             ) : (
