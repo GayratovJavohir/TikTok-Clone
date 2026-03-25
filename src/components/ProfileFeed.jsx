@@ -180,7 +180,7 @@ export default function ProfileFeed({ post, onClose }) {
             const res = await axios.post(
                 "https://tiktok-clone-backend-hb85.onrender.com/posts/comments/",
                 {
-                    post: currentPost.id,
+                    post_id: currentPost.id,
                     text: fake.text
                 },
                 { headers: { Authorization: `Bearer ${token}` } }
