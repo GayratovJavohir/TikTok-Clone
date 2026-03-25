@@ -19,7 +19,7 @@ export default function RegisterForm() {
     const onSubmit = async (data) => {
         setServerError("")
 
-        const response = await fetch("https://tiktok-clone-backend-hb85.onrender.com/users/register/", {
+        const response = await fetch("http://localhost:8000/users/register/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -30,7 +30,7 @@ export default function RegisterForm() {
         const result = await response.json()
 
         if (response.ok) {
-            const loginRes = await fetch("https://tiktok-clone-backend-hb85.onrender.com/users/login/", {
+            const loginRes = await fetch("http://localhost:8000/users/login/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

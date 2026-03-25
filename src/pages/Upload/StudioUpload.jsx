@@ -5,15 +5,6 @@ import "../../styles/upload/studioUpload.css";
 
 const API_BASE = "https://tiktok-clone-backend-hb85.onrender.com";
 
-// JWT token decode
-const parseJwt = (token) => {
-    try {
-        return JSON.parse(atob(token.split(".")[1]));
-    } catch (e) {
-        return null;
-    }
-};
-
 export default function StudioUpload() {
     const navigate = useNavigate();
     const fileInputRef = useRef(null);
@@ -24,7 +15,6 @@ export default function StudioUpload() {
     const [uploading, setUploading] = useState(false);
     const [mediaPreview, setMediaPreview] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [userId, setUserId] = useState(null);
 
     const [uploadType, setUploadType] = useState("post"); // post | story
 
@@ -33,28 +23,35 @@ export default function StudioUpload() {
 
     useEffect(() => {
         const token = localStorage.getItem("access_token");
+
         if (!token) {
             alert("Iltimos, avval tizimga kiring!");
             navigate("/login");
             return;
         }
 
-        const decoded = parseJwt(token);
-        if (decoded) {
-            const uid =
-                decoded.user_id || decoded.userId || decoded.id || decoded.sub || null;
-            setUserId(uid);
-        }
         setIsAuthenticated(true);
-    }, [navigate]);
 
-    // -------- Handlers ----------
+        return () => {
+            if (
+                mediaPreview &&
+                typeof mediaPreview === "string" &&
+                mediaPreview.startsWith("blob:")
+            ) {
+                URL.revokeObjectURL(mediaPreview);
+            }
+        };
+    }, [navigate, mediaPreview]);
+
     const handleMediaChange = (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // old blob preview cleanup
-        if (mediaPreview && typeof mediaPreview === "string" && mediaPreview.startsWith("blob:")) {
+        if (
+            mediaPreview &&
+            typeof mediaPreview === "string" &&
+            mediaPreview.startsWith("blob:")
+        ) {
             URL.revokeObjectURL(mediaPreview);
         }
 
@@ -70,9 +67,14 @@ export default function StudioUpload() {
     };
 
     const handleDiscard = () => {
-        if (mediaPreview && typeof mediaPreview === "string" && mediaPreview.startsWith("blob:")) {
+        if (
+            mediaPreview &&
+            typeof mediaPreview === "string" &&
+            mediaPreview.startsWith("blob:")
+        ) {
             URL.revokeObjectURL(mediaPreview);
         }
+
         setMediaFile(null);
         setTitle("");
         setCaption("");
@@ -80,35 +82,40 @@ export default function StudioUpload() {
         setHashtagId("");
         setMediaPreview(null);
 
-        if (fileInputRef.current) fileInputRef.current.value = "";
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
     };
 
     const buildFormData = () => {
         const fd = new FormData();
 
-        // media
-        if (mediaFile?.type?.startsWith("image/")) fd.append("image", mediaFile);
-        else if (mediaFile?.type?.startsWith("video/")) fd.append("video", mediaFile);
-
-        // POST bo'lsa title/caption kerak bo'lishi mumkin
-        if (uploadType === "post") {
-            fd.append("title", title);
-            fd.append("caption", caption);
-
-            if (musicId?.toString().trim()) fd.append("music", musicId);
-            if (hashtagId?.toString().trim()) fd.append("hashtag", hashtagId);
-
-            if (userId) fd.append("author_id", Number(userId));
+        if (mediaFile?.type?.startsWith("image/")) {
+            fd.append("image", mediaFile);
+        } else if (mediaFile?.type?.startsWith("video/")) {
+            fd.append("video", mediaFile);
         }
 
-        // STORY bo'lsa backendda faqat image/video + expires_at backend set qiladi (perform_create)
-        // title/caption story modelda yo'q bo'lishi mumkin, shuning uchun storyga append qilmaymiz.
+        if (uploadType === "post") {
+            fd.append("title", title.trim());
+            fd.append("caption", caption.trim());
+
+            if (musicId?.toString().trim()) {
+                fd.append("music", musicId);
+            }
+
+            if (hashtagId?.toString().trim()) {
+                fd.append("hashtag", hashtagId);
+            }
+        }
+
         return fd;
     };
 
     const getEndpoint = () => {
-        if (uploadType === "story") return `${API_BASE}/posts/stories/`;
-        return `${API_BASE}/posts/posts/`;
+        return uploadType === "story"
+            ? `${API_BASE}/posts/stories/`
+            : `${API_BASE}/posts/posts/`;
     };
 
     const validateBeforeUpload = () => {
@@ -117,12 +124,12 @@ export default function StudioUpload() {
             navigate("/login");
             return false;
         }
+
         if (!mediaFile) {
             alert("Iltimos, rasm yoki video tanlang!");
             return false;
         }
 
-        // Post uchun title majburiy
         if (uploadType === "post" && !title.trim()) {
             alert("Iltimos, post uchun sarlavha kiriting!");
             return false;
@@ -149,19 +156,20 @@ export default function StudioUpload() {
 
             console.log("🚀 Upload:", uploadType, url);
             console.log("📊 FormData:");
-            for (let [k, v] of formData.entries()) {
+            for (const [k, v] of formData.entries()) {
                 console.log(k, v instanceof File ? `${v.name} (${v.type})` : v);
             }
 
             const response = await axios.post(url, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
-                    "Content-Type": "multipart/form-data",
                 },
             });
 
             console.log("✅ Success:", response.data);
-            alert(`✅ ${uploadType === "story" ? "Story" : "Post"} muvaffaqiyatli yuklandi!`);
+            alert(
+                `✅ ${uploadType === "story" ? "Story" : "Post"} muvaffaqiyatli yuklandi!`
+            );
             handleDiscard();
         } catch (error) {
             console.error("❌ Error:", error);
@@ -172,7 +180,10 @@ export default function StudioUpload() {
 
                 let msg = "Yuklashda xatolik:\n";
 
-                if (typeof error.response.data === "object" && error.response.data !== null) {
+                if (
+                    typeof error.response.data === "object" &&
+                    error.response.data !== null
+                ) {
                     for (const [k, v] of Object.entries(error.response.data)) {
                         msg += `${k}: ${Array.isArray(v) ? v.join(", ") : v}\n`;
                     }
@@ -205,7 +216,15 @@ export default function StudioUpload() {
 
     if (!isAuthenticated) {
         return (
-            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", fontSize: 18 }}>
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100vh",
+                    fontSize: 18,
+                }}
+            >
                 🔐 Authentication tekshirilmoqda...
             </div>
         );
@@ -219,7 +238,6 @@ export default function StudioUpload() {
                 {isPost ? "🎬 Post Yaratish" : "⏳ Story Yaratish"}
             </h2>
 
-            {/* Switch */}
             <div style={{ marginBottom: 20, display: "flex", gap: 10 }}>
                 <button
                     onClick={() => setUploadType("post")}
@@ -250,11 +268,18 @@ export default function StudioUpload() {
                 </button>
             </div>
 
-            {/* Card */}
-            <div style={{ backgroundColor: "white", padding: 20, borderRadius: 10, boxShadow: "0 2px 10px rgba(0,0,0,0.1)" }}>
-                {/* File */}
+            <div
+                style={{
+                    backgroundColor: "white",
+                    padding: 20,
+                    borderRadius: 10,
+                    boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+                }}
+            >
                 <div style={{ marginBottom: 20 }}>
-                    <label style={{ display: "block", marginBottom: 8, fontWeight: "bold" }}>
+                    <label
+                        style={{ display: "block", marginBottom: 8, fontWeight: "bold" }}
+                    >
                         Fayl tanlash *
                     </label>
 
@@ -274,31 +299,39 @@ export default function StudioUpload() {
 
                     {mediaFile && (
                         <p style={{ marginTop: 10, color: "#666" }}>
-                            ✅ Tanlangan: {mediaFile.name} ({(mediaFile.size / 1024).toFixed(1)} KB)
+                            ✅ Tanlangan: {mediaFile.name} (
+                            {(mediaFile.size / 1024).toFixed(1)} KB)
                         </p>
                     )}
 
-                    {/* Preview */}
                     {mediaPreview && (
                         <div style={{ marginTop: 12 }}>
                             {mediaPreview === "video" ? (
-                                <p style={{ color: "#666" }}>🎞️ Video tanlandi (preview yo‘q)</p>
+                                <p style={{ color: "#666" }}>
+                                    🎞️ Video tanlandi (preview yo‘q)
+                                </p>
                             ) : (
                                 <img
                                     src={mediaPreview}
                                     alt="preview"
-                                    style={{ width: "100%", maxHeight: 320, objectFit: "cover", borderRadius: 10 }}
+                                    style={{
+                                        width: "100%",
+                                        maxHeight: 320,
+                                        objectFit: "cover",
+                                        borderRadius: 10,
+                                    }}
                                 />
                             )}
                         </div>
                     )}
                 </div>
 
-                {/* Post fields */}
                 {isPost && (
                     <>
                         <div style={{ marginBottom: 20 }}>
-                            <label style={{ display: "block", marginBottom: 8, fontWeight: "bold" }}>
+                            <label
+                                style={{ display: "block", marginBottom: 8, fontWeight: "bold" }}
+                            >
                                 Sarlavha *
                             </label>
                             <input
@@ -317,7 +350,9 @@ export default function StudioUpload() {
                         </div>
 
                         <div style={{ marginBottom: 20 }}>
-                            <label style={{ display: "block", marginBottom: 8, fontWeight: "bold" }}>
+                            <label
+                                style={{ display: "block", marginBottom: 8, fontWeight: "bold" }}
+                            >
                                 Izoh
                             </label>
                             <textarea
@@ -336,43 +371,69 @@ export default function StudioUpload() {
                             />
                         </div>
 
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 15, marginBottom: 20 }}>
+                        <div
+                            style={{
+                                display: "grid",
+                                gridTemplateColumns: "1fr 1fr",
+                                gap: 15,
+                                marginBottom: 20,
+                            }}
+                        >
                             <div>
-                                <label style={{ display: "block", marginBottom: 8 }}>Music ID</label>
+                                <label style={{ display: "block", marginBottom: 8 }}>
+                                    Music ID
+                                </label>
                                 <input
                                     type="number"
                                     placeholder="Optional"
                                     value={musicId}
                                     onChange={(e) => setMusicId(e.target.value)}
-                                    style={{ width: "100%", padding: 10, border: "1px solid #ddd", borderRadius: 6 }}
+                                    style={{
+                                        width: "100%",
+                                        padding: 10,
+                                        border: "1px solid #ddd",
+                                        borderRadius: 6,
+                                    }}
                                 />
                             </div>
 
                             <div>
-                                <label style={{ display: "block", marginBottom: 8 }}>Hashtag ID</label>
+                                <label style={{ display: "block", marginBottom: 8 }}>
+                                    Hashtag ID
+                                </label>
                                 <input
                                     type="number"
                                     placeholder="Optional"
                                     value={hashtagId}
                                     onChange={(e) => setHashtagId(e.target.value)}
-                                    style={{ width: "100%", padding: 10, border: "1px solid #ddd", borderRadius: 6 }}
+                                    style={{
+                                        width: "100%",
+                                        padding: 10,
+                                        border: "1px solid #ddd",
+                                        borderRadius: 6,
+                                    }}
                                 />
                             </div>
                         </div>
                     </>
                 )}
 
-                {/* Debug */}
-                <div style={{ backgroundColor: "#f8f9fa", padding: 15, borderRadius: 8, marginBottom: 20, fontSize: 14 }}>
+                <div
+                    style={{
+                        backgroundColor: "#f8f9fa",
+                        padding: 15,
+                        borderRadius: 8,
+                        marginBottom: 20,
+                        fontSize: 14,
+                    }}
+                >
                     <p><strong>Debug:</strong></p>
                     <p>🔑 Token: {localStorage.getItem("access_token") ? "✅" : "❌"}</p>
-                    <p>👤 User ID: {userId || "❌ Topilmadi"}</p>
                     <p>📁 File: {mediaFile ? "✅" : "❌"}</p>
                     {isPost && <p>🏷️ Title: {title ? "✅" : "❌"}</p>}
                     <p>🔗 Endpoint: {isPost ? "/posts/posts/" : "/posts/stories/"}</p>
                 </div>
 
-                {/* Buttons */}
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <button
                         onClick={handleDiscard}
@@ -395,20 +456,40 @@ export default function StudioUpload() {
                         disabled={uploading || !mediaFile || (isPost && !title.trim())}
                         style={{
                             padding: "12px 24px",
-                            backgroundColor: uploading ? "#ccc" : (!mediaFile || (isPost && !title.trim()) ? "#95c7ff" : (isPost ? "#007bff" : "#ff0050")),
+                            backgroundColor: uploading
+                                ? "#ccc"
+                                : !mediaFile || (isPost && !title.trim())
+                                    ? "#95c7ff"
+                                    : isPost
+                                        ? "#007bff"
+                                        : "#ff0050",
                             color: "white",
                             border: "none",
                             borderRadius: 6,
-                            cursor: (!mediaFile || (isPost && !title.trim())) ? "not-allowed" : "pointer",
+                            cursor:
+                                !mediaFile || (isPost && !title.trim())
+                                    ? "not-allowed"
+                                    : "pointer",
                             fontWeight: "bold",
                         }}
                     >
-                        {uploading ? "⏳ Yuklanmoqda..." : (isPost ? "🚀 Postni Joylash" : "🚀 Story Joylash")}
+                        {uploading
+                            ? "⏳ Yuklanmoqda..."
+                            : isPost
+                                ? "🚀 Postni Joylash"
+                                : "🚀 Story Joylash"}
                     </button>
                 </div>
 
-                {/* Note */}
-                <div style={{ marginTop: 20, padding: 10, backgroundColor: "#e6f3ff", borderRadius: 6, fontSize: 14 }}>
+                <div
+                    style={{
+                        marginTop: 20,
+                        padding: 10,
+                        backgroundColor: "#e6f3ff",
+                        borderRadius: 6,
+                        fontSize: 14,
+                    }}
+                >
                     <p><strong>Eslatma:</strong></p>
                     <p>• Story uchun faqat <strong>fayl</strong> yetadi (24 soatga avtomatik)</p>
                     <p>• Post uchun <strong>Fayl + Sarlavha</strong> majburiy</p>
