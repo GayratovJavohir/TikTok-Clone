@@ -32,6 +32,11 @@ export default function ProfileFeed({ post, onClose }) {
 
     useEffect(() => {
         if (post) {
+            console.log("POST PROP:", post);
+            console.log("POST IMAGE:", post.image);
+            console.log("POST VIDEO:", post.video);
+            console.log("POST AUTHOR:", post.author);
+            
             setCurrentPost(post);
             fetchComments(post.id);
         }
@@ -416,6 +421,7 @@ export default function ProfileFeed({ post, onClose }) {
 
     const mediaVideoUrl = getMediaUrl(currentPost.video);
     const mediaImageUrl = getMediaUrl(currentPost.image);
+
 
     return (
         <div className="modal-overlay" onClick={onClose}>
