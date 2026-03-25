@@ -1,63 +1,73 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import axios from "axios"
+import React, { useState, useEffect } from 'react';
+import axios from "axios";
 import '../styles/profile-feed.css';
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+
+const API_BASE = "https://tiktok-clone-backend-hb85.onrender.com";
+
+const getMediaUrl = (filePath) => {
+    if (!filePath) return null;
+    if (filePath.startsWith("http://") || filePath.startsWith("https://")) {
+        return filePath;
+    }
+    return `${API_BASE}${filePath}`;
+};
 
 export default function ProfileFeed({ post, onClose }) {
-    const navigate = useNavigate()
-    const myId = Number(localStorage.getItem("my_user_id"))
-    const myUsername = localStorage.getItem("my_username") || "You"
+    const navigate = useNavigate();
+    const myId = Number(localStorage.getItem("my_user_id"));
+    const myUsername = localStorage.getItem("my_username") || "You";
 
-    const [currentPost, setCurrentPost] = useState(post)
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState(null)
+    const [currentPost, setCurrentPost] = useState(post);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-    const [comments, setComments] = useState([])
-    const [commentText, setCommentText] = useState("")
-    const [replyingTo, setReplyingTo] = useState(null)
-    const [replyText, setReplyText] = useState("")
-    const [expandedComments, setExpandedComments] = useState(new Set())
+    const [comments, setComments] = useState([]);
+    const [commentText, setCommentText] = useState("");
+    const [replyingTo, setReplyingTo] = useState(null);
+    const [replyText, setReplyText] = useState("");
+    const [expandedComments, setExpandedComments] = useState(new Set());
 
     useEffect(() => {
         if (post) {
-            setCurrentPost(post)
-            fetchComments(post.id)
+            setCurrentPost(post);
+            fetchComments(post.id);
         }
-    }, [post])
+    }, [post]);
 
     if (!post) {
         return <div className="profile-feed"></div>;
     }
 
     const formatTimestamp = (dateString) => {
-        const date = new Date(dateString)
-        const now = new Date()
-        const diffMs = now - date
-        const diffMins = Math.floor(diffMs / 60000)
-        const diffHours = Math.floor(diffMs / 3600000)
-        const diffDays = Math.floor(diffMs / 86400000)
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / 3600000);
+        const diffDays = Math.floor(diffMs / 86400000);
 
-        if (diffMins < 60) return `${diffMins}m ago`
-        if (diffHours < 24) return `${diffHours}h ago`
-        if (diffDays < 7) return `${diffDays}d ago`
+        if (diffMins < 60) return `${diffMins}m ago`;
+        if (diffHours < 24) return `${diffHours}h ago`;
+        if (diffDays < 7) return `${diffDays}d ago`;
 
-        const day = date.getDate()
-        const month = date.toLocaleString('default', { month: 'short' })
-        const year = date.getFullYear()
-        return `${day} ${month} ${year}`
-    }
+        const day = date.getDate();
+        const month = date.toLocaleString('default', { month: 'short' });
+        const year = date.getFullYear();
+        return `${day} ${month} ${year}`;
+    };
 
     const fetchComments = async (postId) => {
         try {
-            const token = localStorage.getItem("access_token")
+            const token = localStorage.getItem("access_token");
             const res = await axios.get(
-                `https://tiktok-clone-backend-hb85.onrender.com/posts/comments/?post=${postId}`,
+                `${API_BASE}/posts/comments/?post=${postId}`,
                 {
                     headers: token ? { Authorization: `Bearer ${token}` } : {}
                 }
-            )
+            );
 
             let formattedComments = (res.data.results || []).map(c => ({
                 ...c,
@@ -68,94 +78,98 @@ export default function ProfileFeed({ post, onClose }) {
                     liked_by_me: r.liked_by_me ?? false,
                     likes_count: r.likes_count ?? 0
                 })).sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-            }))
+            }));
 
-            formattedComments = formattedComments.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-            setComments(formattedComments)
+            formattedComments = formattedComments.sort(
+                (a, b) => new Date(b.created_at) - new Date(a.created_at)
+            );
 
+            setComments(formattedComments);
         } catch (err) {
-            console.error("COMMENTS FETCH ERROR", err)
-            setComments([])
+            console.error("COMMENTS FETCH ERROR", err);
+            setComments([]);
         }
-    }
+    };
 
     const toggleLike = async () => {
-        const token = localStorage.getItem("access_token")
-        if (!token) return
+        const token = localStorage.getItem("access_token");
+        if (!token) return;
 
-        const wasLiked = currentPost.is_liked
-        const newLikesCount = wasLiked ? currentPost.likes_count - 1 : currentPost.likes_count + 1
+        const wasLiked = currentPost.is_liked;
+        const newLikesCount = wasLiked
+            ? currentPost.likes_count - 1
+            : currentPost.likes_count + 1;
 
         setCurrentPost(prev => ({
             ...prev,
             is_liked: !wasLiked,
             likes_count: newLikesCount
-        }))
+        }));
 
         try {
             const res = await axios.post(
-                `https://tiktok-clone-backend-hb85.onrender.com/posts/posts/${currentPost.id}/like_toggle/`,
+                `${API_BASE}/posts/posts/${currentPost.id}/like_toggle/`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
-            )
+            );
 
             setCurrentPost(prev => ({
                 ...prev,
                 is_liked: res.data.liked,
                 likes_count: res.data.likes_count
-            }))
-
+            }));
         } catch (err) {
-            console.error("LIKE ERROR:", err)
+            console.error("LIKE ERROR:", err);
             setCurrentPost(prev => ({
                 ...prev,
                 is_liked: wasLiked,
                 likes_count: wasLiked ? prev.likes_count + 1 : prev.likes_count - 1
-            }))
+            }));
         }
-    }
+    };
 
     const toggleSave = async () => {
-        const token = localStorage.getItem("access_token")
-        if (!token) return
+        const token = localStorage.getItem("access_token");
+        if (!token) return;
 
-        const wasSaved = currentPost.is_saved
-        const newBookmarksCount = wasSaved ? currentPost.bookmarks_count - 1 : currentPost.bookmarks_count + 1
+        const wasSaved = currentPost.is_saved;
+        const newBookmarksCount = wasSaved
+            ? currentPost.bookmarks_count - 1
+            : currentPost.bookmarks_count + 1;
 
         setCurrentPost(prev => ({
             ...prev,
             is_saved: !wasSaved,
             bookmarks_count: newBookmarksCount
-        }))
+        }));
 
         try {
             const res = await axios.post(
-                `https://tiktok-clone-backend-hb85.onrender.com/posts/posts/${currentPost.id}/save_toggle/`,
+                `${API_BASE}/posts/posts/${currentPost.id}/save_toggle/`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
-            )
+            );
 
             setCurrentPost(prev => ({
                 ...prev,
                 is_saved: res.data.bookmarked,
                 bookmarks_count: res.data.bookmarks_count
-            }))
-
+            }));
         } catch (err) {
-            console.error("SAVE ERROR:", err)
+            console.error("SAVE ERROR:", err);
             setCurrentPost(prev => ({
                 ...prev,
                 is_saved: wasSaved,
                 bookmarks_count: wasSaved ? prev.bookmarks_count + 1 : prev.bookmarks_count - 1
-            }))
+            }));
         }
-    }
+    };
 
     const sendComment = async () => {
-        if (!commentText.trim()) return
+        if (!commentText.trim()) return;
 
-        const token = localStorage.getItem("access_token")
-        if (!token) return
+        const token = localStorage.getItem("access_token");
+        if (!token) return;
 
         const fake = {
             id: Date.now(),
@@ -166,52 +180,57 @@ export default function ProfileFeed({ post, onClose }) {
             reply_comments: [],
             created_at: new Date().toISOString(),
             optimistic: true
-        }
+        };
 
-        setComments(prev => [fake, ...prev])
-        setCommentText("")
+        setComments(prev => [fake, ...prev]);
+        setCommentText("");
 
         setCurrentPost(prev => ({
             ...prev,
             comments_count: prev.comments_count + 1
-        }))
+        }));
 
         try {
             const res = await axios.post(
-                "https://tiktok-clone-backend-hb85.onrender.com/posts/comments/",
+                `${API_BASE}/posts/comments/`,
                 {
                     post_id: currentPost.id,
                     text: fake.text
                 },
                 { headers: { Authorization: `Bearer ${token}` } }
-            )
+            );
 
             setComments(prev =>
-                prev.map(c => c.id === fake.id ? {
-                    ...res.data,
-                    liked_by_me: res.data.liked_by_me ?? false,
-                    likes_count: res.data.likes_count ?? 0,
-                    reply_comments: res.data.reply_comments || []
-                } : c)
-            )
-
+                prev.map(c =>
+                    c.id === fake.id
+                        ? {
+                            ...res.data,
+                            liked_by_me: res.data.liked_by_me ?? false,
+                            likes_count: res.data.likes_count ?? 0,
+                            reply_comments: res.data.reply_comments || []
+                        }
+                        : c
+                )
+            );
         } catch (err) {
-            console.error("SEND COMMENT ERROR", err)
-            setComments(prev => prev.filter(c => c.id !== fake.id))
+            console.error("SEND COMMENT ERROR", err);
+            setComments(prev => prev.filter(c => c.id !== fake.id));
             setCurrentPost(prev => ({
                 ...prev,
                 comments_count: prev.comments_count - 1
-            }))
+            }));
         }
-    }
+    };
 
     const sendReply = async (commentId, mentionedUsername = null) => {
-        if (!replyText.trim()) return
+        if (!replyText.trim()) return;
 
-        const token = localStorage.getItem("access_token")
-        if (!token) return
+        const token = localStorage.getItem("access_token");
+        if (!token) return;
 
-        const textWithMention = mentionedUsername ? `@${mentionedUsername} ${replyText}` : replyText
+        const textWithMention = mentionedUsername
+            ? `@${mentionedUsername} ${replyText}`
+            : replyText;
 
         const fakeReply = {
             id: Date.now(),
@@ -221,7 +240,7 @@ export default function ProfileFeed({ post, onClose }) {
             likes_count: 0,
             created_at: new Date().toISOString(),
             optimistic: true
-        }
+        };
 
         setComments(prev =>
             prev.map(comment => {
@@ -229,24 +248,24 @@ export default function ProfileFeed({ post, onClose }) {
                     return {
                         ...comment,
                         reply_comments: [fakeReply, ...(comment.reply_comments || [])]
-                    }
+                    };
                 }
-                return comment
+                return comment;
             })
-        )
+        );
 
-        setReplyText("")
-        setReplyingTo(null)
+        setReplyText("");
+        setReplyingTo(null);
 
         try {
             const res = await axios.post(
-                "https://tiktok-clone-backend-hb85.onrender.com/posts/reply_comments/",
+                `${API_BASE}/posts/reply_comments/`,
                 {
                     parent_comment: commentId,
                     text: textWithMention
                 },
                 { headers: { Authorization: `Bearer ${token}` } }
-            )
+            );
 
             setComments(prev =>
                 prev.map(comment => {
@@ -254,36 +273,38 @@ export default function ProfileFeed({ post, onClose }) {
                         return {
                             ...comment,
                             reply_comments: comment.reply_comments.map(reply =>
-                                reply.id === fakeReply.id ? {
-                                    ...res.data,
-                                    liked_by_me: res.data.liked_by_me ?? false,
-                                    likes_count: res.data.likes_count ?? 0
-                                } : reply
+                                reply.id === fakeReply.id
+                                    ? {
+                                        ...res.data,
+                                        liked_by_me: res.data.liked_by_me ?? false,
+                                        likes_count: res.data.likes_count ?? 0
+                                    }
+                                    : reply
                             )
-                        }
+                        };
                     }
-                    return comment
+                    return comment;
                 })
-            )
+            );
         } catch (err) {
-            console.error("SEND REPLY ERROR", err)
+            console.error("SEND REPLY ERROR", err);
             setComments(prev =>
                 prev.map(comment => {
                     if (comment.id === commentId) {
                         return {
                             ...comment,
                             reply_comments: comment.reply_comments.filter(r => r.id !== fakeReply.id)
-                        }
+                        };
                     }
-                    return comment
+                    return comment;
                 })
-            )
+            );
         }
-    }
+    };
 
     const toggleReplyLike = async (commentId, replyId) => {
-        const token = localStorage.getItem("access_token")
-        if (!token) return
+        const token = localStorage.getItem("access_token");
+        if (!token) return;
 
         setComments(prev =>
             prev.map(comment => {
@@ -295,23 +316,25 @@ export default function ProfileFeed({ post, onClose }) {
                                 return {
                                     ...reply,
                                     liked_by_me: !reply.liked_by_me,
-                                    likes_count: reply.liked_by_me ? reply.likes_count - 1 : reply.likes_count + 1
-                                }
+                                    likes_count: reply.liked_by_me
+                                        ? reply.likes_count - 1
+                                        : reply.likes_count + 1
+                                };
                             }
-                            return reply
+                            return reply;
                         })
-                    }
+                    };
                 }
-                return comment
+                return comment;
             })
-        )
+        );
 
         try {
             const res = await axios.post(
-                `https://tiktok-clone-backend-hb85.onrender.com/posts/reply_comments/${replyId}/like_toggle/`,
+                `${API_BASE}/posts/reply_comments/${replyId}/like_toggle/`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
-            )
+            );
 
             setComments(prev =>
                 prev.map(comment => {
@@ -327,19 +350,19 @@ export default function ProfileFeed({ post, onClose }) {
                                     }
                                     : reply
                             )
-                        }
+                        };
                     }
-                    return comment
+                    return comment;
                 })
-            )
+            );
         } catch (err) {
-            console.error("REPLY LIKE ERROR:", err)
+            console.error("REPLY LIKE ERROR:", err);
         }
-    }
+    };
 
     const toggleCommentLike = async (commentId) => {
-        const token = localStorage.getItem("access_token")
-        if (!token) return
+        const token = localStorage.getItem("access_token");
+        if (!token) return;
 
         setComments(prev =>
             prev.map(comment => {
@@ -347,19 +370,21 @@ export default function ProfileFeed({ post, onClose }) {
                     return {
                         ...comment,
                         liked_by_me: !comment.liked_by_me,
-                        likes_count: comment.liked_by_me ? comment.likes_count - 1 : comment.likes_count + 1
-                    }
+                        likes_count: comment.liked_by_me
+                            ? comment.likes_count - 1
+                            : comment.likes_count + 1
+                    };
                 }
-                return comment
+                return comment;
             })
-        )
+        );
 
         try {
             const res = await axios.post(
-                `https://tiktok-clone-backend-hb85.onrender.com/posts/comments/${commentId}/like_toggle/`,
+                `${API_BASE}/posts/comments/${commentId}/like_toggle/`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
-            )
+            );
 
             setComments(prev =>
                 prev.map(comment =>
@@ -371,23 +396,26 @@ export default function ProfileFeed({ post, onClose }) {
                         }
                         : comment
                 )
-            )
+            );
         } catch (err) {
-            console.error("COMMENT LIKE ERROR:", err)
+            console.error("COMMENT LIKE ERROR:", err);
         }
-    }
+    };
 
     const toggleReplies = (commentId) => {
         setExpandedComments(prev => {
-            const newSet = new Set(prev)
+            const newSet = new Set(prev);
             if (newSet.has(commentId)) {
-                newSet.delete(commentId)
+                newSet.delete(commentId);
             } else {
-                newSet.add(commentId)
+                newSet.add(commentId);
             }
-            return newSet
-        })
-    }
+            return newSet;
+        });
+    };
+
+    const mediaVideoUrl = getMediaUrl(currentPost.video);
+    const mediaImageUrl = getMediaUrl(currentPost.image);
 
     return (
         <div className="modal-overlay" onClick={onClose}>
@@ -401,23 +429,24 @@ export default function ProfileFeed({ post, onClose }) {
 
                 <div className="modal-video-section">
                     <div className="video-player">
-                        {currentPost.video ? (
+                        {mediaVideoUrl ? (
                             <video
-                                src={`https://tiktok-clone-backend-hb85.onrender.com${currentPost.video}`}
+                                src={mediaVideoUrl}
                                 controls
                                 autoPlay
                                 playsInline
                                 loop
                             />
-                        ) : currentPost.image ? (
+                        ) : mediaImageUrl ? (
                             <img
-                                src={`https://tiktok-clone-backend-hb85.onrender.com${currentPost.image}`}
-                                alt={currentPost.title}
+                                src={mediaImageUrl}
+                                alt={currentPost.title || "post"}
                             />
                         ) : (
                             <div className="no-media">📹</div>
                         )}
                     </div>
+
                     <button className="view-analytics">
                         <i className="fa-solid fa-chart-line"></i> View Analytics
                     </button>
@@ -437,8 +466,12 @@ export default function ProfileFeed({ post, onClose }) {
                     <div className="user-section">
                         <div className="user-header">
                             <div className="user-info">
-                                <h3 className="username">@{currentPost.author?.username || currentPost.username || "user"}</h3>
-                                <p className="timestamp">{formatTimestamp(currentPost.created_at || new Date())}</p>
+                                <h3 className="username">
+                                    @{currentPost.author?.username || currentPost.username || "user"}
+                                </h3>
+                                <p className="timestamp">
+                                    {formatTimestamp(currentPost.created_at || new Date())}
+                                </p>
                             </div>
                             <button className="menu-icon">
                                 <i className="fa-solid fa-ellipsis-vertical"></i>
@@ -452,7 +485,9 @@ export default function ProfileFeed({ post, onClose }) {
 
                     <div className="audio-info">
                         <i className="fa-solid fa-music"></i>
-                        <span>original sound - {currentPost.author?.username || currentPost.username || "user"}</span>
+                        <span>
+                            original sound - {currentPost.author?.username || currentPost.username || "user"}
+                        </span>
                     </div>
 
                     <div className="interaction-buttons">
@@ -463,10 +498,12 @@ export default function ProfileFeed({ post, onClose }) {
                             <i className={`fa-${currentPost.is_liked ? 'solid' : 'regular'} fa-heart`}></i>
                             <span>{currentPost.likes_count || 0}</span>
                         </button>
+
                         <button className="btn-icon">
                             <i className="fa-regular fa-comment"></i>
                             <span>{currentPost.comments_count || comments.length}</span>
                         </button>
+
                         <button
                             className={`btn-icon ${currentPost.is_saved ? 'active' : ''}`}
                             onClick={toggleSave}
@@ -474,9 +511,11 @@ export default function ProfileFeed({ post, onClose }) {
                             <i className={`fa-${currentPost.is_saved ? 'solid' : 'regular'} fa-bookmark`}></i>
                             <span>{currentPost.bookmarks_count || 0}</span>
                         </button>
+
                         <button className="btn-icon">
                             <i className="fa-brands fa-x-twitter"></i>
                         </button>
+
                         <button className="btn-icon">
                             <i className="fa-solid fa-share"></i>
                         </button>
@@ -488,9 +527,14 @@ export default function ProfileFeed({ post, onClose }) {
                             value={`https://www.tiktok.com/@${currentPost.author?.username || currentPost.username || 'user'}/video/${currentPost.id}`}
                             readOnly
                         />
-                        <button className="copy-btn" onClick={() => {
-                            navigator.clipboard.writeText(`https://www.tiktok.com/@${currentPost.author?.username || currentPost.username || 'user'}/video/${currentPost.id}`)
-                        }}>
+                        <button
+                            className="copy-btn"
+                            onClick={() => {
+                                navigator.clipboard.writeText(
+                                    `https://www.tiktok.com/@${currentPost.author?.username || currentPost.username || 'user'}/video/${currentPost.id}`
+                                );
+                            }}
+                        >
                             Copy link
                         </button>
                     </div>
@@ -509,10 +553,14 @@ export default function ProfileFeed({ post, onClose }) {
                                     <div className="comment-header">
                                         <div className="comment-user">
                                             <strong>{comment.user?.username}</strong>
-                                            <span className="comment-time">{formatTimestamp(comment.created_at)}</span>
+                                            <span className="comment-time">
+                                                {formatTimestamp(comment.created_at)}
+                                            </span>
                                         </div>
                                     </div>
+
                                     <p className="comment-text">{comment.text}</p>
+
                                     <div className="comment-actions">
                                         <button
                                             className={`comment-like-btn ${comment.liked_by_me ? 'active' : ''}`}
@@ -521,6 +569,7 @@ export default function ProfileFeed({ post, onClose }) {
                                             <i className={`fa-${comment.liked_by_me ? 'solid' : 'regular'} fa-heart`}></i>
                                             {comment.likes_count > 0 && <span>{comment.likes_count}</span>}
                                         </button>
+
                                         <button
                                             className="reply-btn"
                                             onClick={() => setReplyingTo(replyingTo === comment.id ? null : comment.id)}
@@ -535,34 +584,42 @@ export default function ProfileFeed({ post, onClose }) {
                                             onClick={() => toggleReplies(comment.id)}
                                         >
                                             <i className={`fa-solid fa-chevron-${expandedComments.has(comment.id) ? 'up' : 'down'}`}></i>
-                                            {expandedComments.has(comment.id) ? 'Hide' : 'View'} {comment.reply_comments.length} {comment.reply_comments.length === 1 ? 'reply' : 'replies'}
+                                            {expandedComments.has(comment.id) ? 'Hide' : 'View'}{" "}
+                                            {comment.reply_comments.length}{" "}
+                                            {comment.reply_comments.length === 1 ? 'reply' : 'replies'}
                                         </button>
                                     )}
 
-                                    {expandedComments.has(comment.id) && comment.reply_comments?.map(reply => (
-                                        <div key={reply.id} className="reply-item">
-                                            <div className="reply-header">
-                                                <strong>{reply.user?.username}</strong>
-                                                <span className="reply-time">{formatTimestamp(reply.created_at)}</span>
+                                    {expandedComments.has(comment.id) &&
+                                        comment.reply_comments?.map(reply => (
+                                            <div key={reply.id} className="reply-item">
+                                                <div className="reply-header">
+                                                    <strong>{reply.user?.username}</strong>
+                                                    <span className="reply-time">
+                                                        {formatTimestamp(reply.created_at)}
+                                                    </span>
+                                                </div>
+
+                                                <p className="reply-text">{reply.text}</p>
+
+                                                <div className="reply-actions">
+                                                    <button
+                                                        className={`reply-like-btn ${reply.liked_by_me ? 'active' : ''}`}
+                                                        onClick={() => toggleReplyLike(comment.id, reply.id)}
+                                                    >
+                                                        <i className={`fa-${reply.liked_by_me ? 'solid' : 'regular'} fa-heart`}></i>
+                                                        {reply.likes_count > 0 && <span>{reply.likes_count}</span>}
+                                                    </button>
+
+                                                    <button
+                                                        className="reply-to-reply-btn"
+                                                        onClick={() => setReplyingTo(comment.id)}
+                                                    >
+                                                        Reply
+                                                    </button>
+                                                </div>
                                             </div>
-                                            <p className="reply-text">{reply.text}</p>
-                                            <div className="reply-actions">
-                                                <button
-                                                    className={`reply-like-btn ${reply.liked_by_me ? 'active' : ''}`}
-                                                    onClick={() => toggleReplyLike(comment.id, reply.id)}
-                                                >
-                                                    <i className={`fa-${reply.liked_by_me ? 'solid' : 'regular'} fa-heart`}></i>
-                                                    {reply.likes_count > 0 && <span>{reply.likes_count}</span>}
-                                                </button>
-                                                <button
-                                                    className="reply-to-reply-btn"
-                                                    onClick={() => setReplyingTo(comment.id)}
-                                                >
-                                                    Reply
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ))}
+                                        ))}
 
                                     {replyingTo === comment.id && (
                                         <div className="reply-input-wrapper">
@@ -571,9 +628,9 @@ export default function ProfileFeed({ post, onClose }) {
                                                 value={replyText}
                                                 onChange={(e) => setReplyText(e.target.value)}
                                                 placeholder={`Reply to @${comment.user?.username}...`}
-                                                onKeyPress={(e) => {
+                                                onKeyDown={(e) => {
                                                     if (e.key === 'Enter' && replyText.trim()) {
-                                                        sendReply(comment.id, comment.user?.username)
+                                                        sendReply(comment.id, comment.user?.username);
                                                     }
                                                 }}
                                             />
@@ -595,20 +652,23 @@ export default function ProfileFeed({ post, onClose }) {
                         <button className="btn-icon-small">
                             <i className="fa-solid fa-image"></i>
                         </button>
+
                         <input
                             type="text"
                             placeholder="Add comment..."
                             value={commentText}
                             onChange={(e) => setCommentText(e.target.value)}
-                            onKeyPress={(e) => {
+                            onKeyDown={(e) => {
                                 if (e.key === 'Enter' && commentText.trim()) {
-                                    sendComment()
+                                    sendComment();
                                 }
                             }}
                         />
+
                         <button className="emoji-btn">
                             <i className="fa-solid fa-face-smile"></i>
                         </button>
+
                         <button
                             className="post-btn"
                             onClick={sendComment}
