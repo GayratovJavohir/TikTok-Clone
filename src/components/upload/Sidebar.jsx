@@ -42,7 +42,7 @@ export default function Sidebar() {
 
             <button className="upload-btn">
                 <Link to="/tiktokstudio/upload">
-                    <i class="fa-solid fa-plus"></i>
+                    <i className="fa-solid fa-plus"></i>
                     Upload
                 </Link>
             </button>

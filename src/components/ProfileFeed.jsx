@@ -5,7 +5,7 @@ import axios from "axios";
 import '../styles/profile-feed.css';
 import { useNavigate } from "react-router-dom";
 
-const API_BASE = "https://tiktok-clone-backend-hb85.onrender.com";
+const API_BASE = "http://135.136.181.116/";
 
 const getMediaUrl = (filePath) => {
     if (!filePath) return null;
@@ -36,7 +36,7 @@ export default function ProfileFeed({ post, onClose }) {
             console.log("POST IMAGE:", post.image);
             console.log("POST VIDEO:", post.video);
             console.log("POST AUTHOR:", post.author);
-            
+
             setCurrentPost(post);
             fetchComments(post.id);
         }
@@ -531,7 +531,7 @@ export default function ProfileFeed({ post, onClose }) {
                         <input
                             type="text"
                             value={`https://www.tiktok.com/@${currentPost.author?.username || currentPost.username || 'user'}/video/${currentPost.id}`}
-                            readOnly
+                            readOnlyx
                         />
                         <button
                             className="copy-btn"

@@ -22,7 +22,7 @@ export default function LoginForm() {
             return;
         }
 
-        const response = await fetch("http://localhost:8000/users/login/", {
+        const response = await fetch("http://135.136.181.116/users/login/", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

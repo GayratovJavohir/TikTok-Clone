@@ -20,7 +20,7 @@ export default function Studio() {
     const token = localStorage.getItem("access_token");
     if (!token) return;
 
-    fetch("https://tiktok-clone-backend-hb85.onrender.com/users/profile/", {
+    fetch("http://135.136.181.116/users/profile/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -108,14 +108,14 @@ export default function Studio() {
                   <div className="thumbnail">
                     {post.video ? (
                       <video
-                        src={`https://tiktok-clone-backend-hb85.onrender.com${post.video}`}
+                        src={`http://135.136.181.116${post.video}`}
                         muted
                         loop
                         playsInline
                       />
                     ) : post.image ? (
                       <img
-                          src={`https://tiktok-clone-backend-hb85.onrender.com${post.image}`}
+                        src={`http://135.136.181.116${post.image}`}
                         alt=""
                       />
                     ) : null}

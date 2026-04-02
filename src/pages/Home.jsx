@@ -8,7 +8,7 @@ import "../styles/pages.css"
 import { useNavigate } from "react-router-dom"
 import { useDoubleTap } from "use-double-tap"
 
-const API = "https://tiktok-clone-backend-hb85.onrender.com"
+const API = "http://135.136.181.116"
 
 export default function Home() {
     const navigate = useNavigate()
@@ -60,7 +60,7 @@ export default function Home() {
             const token = localStorage.getItem("access_token")
 
             await axios.post(
-                "https://tiktok-clone-backend-hb85.onrender.com/chat/messages/",
+                "http://135.136.181.116/chat/messages/",
                 {
                     room: Number(roomId),
                     text: post.caption || post.title || "Shared post",
@@ -75,6 +75,7 @@ export default function Home() {
             )
 
             localStorage.setItem("last_shared_room_id", String(roomId))
+            alert("Post sent successfully")
         } catch (error) {
             console.error("Share to chat error:", error)
             console.error("Backend response:", error.response?.data)

@@ -5,10 +5,11 @@ import Layout from "../components/Layout";
 import "../styles/profile.css";
 import Profile_Pic from "../assets/64278D6C-146D-4A9D-A8D9-E272869E538E.webp";
 import ProfileFeed from '../components/ProfileFeed';
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 export default function Profile() {
     const { profileId } = useParams();
+    const navigate = useNavigate();
 
     const [activeTab, setActiveTab] = useState("Videos");
     const [profile, setProfile] = useState(null);
@@ -36,7 +37,7 @@ export default function Profile() {
         setLoading(true);
         setSelectedPost(null);
 
-        fetch(`https://tiktok-clone-backend-hb85.onrender.com/users/another-profile/${profileId}/`, {
+        fetch(`http://135.136.181.116/users/another-profile/${profileId}/`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -71,7 +72,7 @@ export default function Profile() {
         : profile?.avatar
             ? profile.avatar.startsWith("http")
                 ? profile.avatar
-                : `https://tiktok-clone-backend-hb85.onrender.com${profile.avatar}`
+                : `http://135.136.181.116${profile.avatar}`
             : Profile_Pic;
 
     const handleFollow = async () => {
@@ -81,7 +82,7 @@ export default function Profile() {
         const method = isFollowing ? "DELETE" : "POST";
 
         const res = await fetch(
-            `https://tiktok-clone-backend-hb85.onrender.com/users/follow/${profileId}/`,
+            `http://135.136.181.116/users/follow/${profileId}/`,
             {
                 method,
                 headers: {
@@ -124,14 +125,14 @@ export default function Profile() {
                         <div className="video-thumbnail">
                             {post.video ? (
                                 <video
-                                    src={`https://tiktok-clone-backend-hb85.onrender.com${post.video}`}
+                                    src={`http://135.136.181.116${post.video}`}
                                     muted
                                     loop
                                     playsInline
                                 />
                             ) : post.image ? (
                                 <img
-                                    src={`https://tiktok-clone-backend-hb85.onrender.com${post.image}`}
+                                    src={`http://135.136.181.116${post.image}`}
                                     alt={post.title}
                                 />
                             ) : (
@@ -182,7 +183,7 @@ export default function Profile() {
                                     {isFollowing ? "Unfollow" : "Follow"}
                                 </button>
 
-                                <button className="message-btn">
+                                <button className="message-btn" onClick={() => navigate(`/messages/${profileId}`)}>
                                     Message
                                 </button>
 

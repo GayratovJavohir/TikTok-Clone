@@ -1,146 +1,529 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ─── Root & Page ─────────────────────────────────── */
 .studio-upload {
-    max-width: 1200px;
-    height: 100vh;
+    font-family: 'DM Sans', sans-serif;
+    background: #f8f8f8;
+    min-height: 100vh;
+    height: auto;
+    overflow-y: auto;
+    color: #111;
+    padding: 32px 24px 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-/* Title */
+/* ─── Header ──────────────────────────────────────── */
+.upload-header {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+}
+
 .upload-title {
-    font-size: 22px;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+    color: #111;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.upload-title span.logo-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fe2c55;
+    box-shadow: 0 0 10px rgba(254, 44, 85, 0.5);
+}
+
+/* ─── Type Toggle ─────────────────────────────────── */
+.type-toggle {
+    display: flex;
+    background: #efefef;
+    border-radius: 12px;
+    padding: 4px;
+    gap: 4px;
+    border: 1px solid #e0e0e0;
+}
+
+.type-toggle button {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 9px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
     font-weight: 600;
-    margin-bottom: 20px;
+    cursor: pointer;
+    transition: all 0.22s ease;
+    background: transparent;
+    color: #999;
+    letter-spacing: 0.2px;
 }
 
-/* Card */
+.type-toggle button.active-post {
+    background: #fe2c55;
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(254, 44, 85, 0.35);
+}
+
+.type-toggle button.active-story {
+    background: linear-gradient(135deg, #25f4ee, #fe2c55);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(37, 244, 238, 0.2);
+}
+
+.type-toggle button:not(.active-post):not(.active-story):hover {
+    color: #555;
+    background: #e5e5e5;
+}
+
+/* ─── Main Card ───────────────────────────────────── */
 .upload-card {
-    background: #fff;
-    border-radius: 12px;
-    padding: 24px;
+    width: 100%;
+    max-width: 900px;
     display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 24px;
-    border: 1px solid #eee;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 0;
+    background: #fff;
+    border-radius: 20px;
+    border: 1px solid #e8e8e8;
+    overflow: hidden;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
 }
 
-/* Upload area */
+/* ─── Left: Dropzone ──────────────────────────────── */
+.upload-dropzone-col {
+    background: #fafafa;
+    border-right: 1px solid #efefef;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 32px;
+    min-height: 520px;
+    position: relative;
+}
+
 .upload-dropzone {
+    width: 100%;
     border: 2px dashed #ddd;
-    border-radius: 12px;
-    height: 420px;
+    border-radius: 16px;
+    height: 360px;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+}
+
+.upload-dropzone::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(254, 44, 85, 0.03) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.upload-dropzone:hover {
+    border-color: #fe2c55;
+    background: rgba(254, 44, 85, 0.02);
+}
+
+.upload-dropzone.has-file {
+    border-color: #25c4be;
+    background: rgba(37, 244, 238, 0.02);
 }
 
 .upload-area {
     text-align: center;
-    cursor: pointer;
     width: 100%;
+    padding: 24px;
+}
+
+.upload-icon-wrap {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(254, 44, 85, 0.1), rgba(37, 244, 238, 0.06));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    border: 1px solid #f0f0f0;
 }
 
 .upload-icon {
-    font-size: 36px;
-    margin-bottom: 12px;
+    font-size: 30px;
+    line-height: 1;
 }
 
 .upload-main-text {
     font-size: 16px;
     font-weight: 600;
-    margin: 6px 0;
+    color: #111;
+    margin-bottom: 6px;
 }
 
 .upload-sub-text {
-    font-size: 14px;
-    color: #8a8a8a;
+    font-size: 13px;
+    color: #aaa;
+    line-height: 1.5;
 }
 
 .upload-hint {
     display: block;
-    margin-top: 6px;
+    margin-top: 4px;
     font-size: 12px;
-    color: #aaa;
+    color: #ccc;
 }
 
-/* Select button */
 .select-btn {
-    margin-top: 18px;
-    padding: 10px 18px;
-    background: #ff0050;
+    margin-top: 20px;
+    padding: 11px 24px;
+    background: #fe2c55;
     color: #fff;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
     font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(254, 44, 85, 0.3);
+    letter-spacing: 0.3px;
 }
 
 .select-btn:hover {
-    background: #ff0050cc;
+    background: #e0203e;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(254, 44, 85, 0.38);
 }
 
-/* Settings */
-.upload-settings {
+/* File info badge */
+.file-info-badge {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(37, 196, 190, 0.06);
+    border: 1px solid rgba(37, 196, 190, 0.2);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 13px;
+    color: #25c4be;
+    width: 100%;
+}
+
+.file-info-badge .file-name {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #555;
+}
+
+/* Image preview */
+.img-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 14px;
+    position: absolute;
+    inset: 0;
+}
+
+.video-badge {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    align-items: center;
+    gap: 8px;
+    color: #bbb;
+}
+
+.video-badge span:first-child {
+    font-size: 36px;
+}
+
+.video-badge span:last-child {
+    font-size: 13px;
+    color: #ccc;
+}
+
+/* ─── Right: Settings ─────────────────────────────── */
+.upload-settings-col {
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: #fff;
+}
+
+/* ─── Form Groups ─────────────────────────────────── */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
 }
 
 .form-group label {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
-    margin-bottom: 6px;
-    display: block;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.form-group input[type="text"],
+.form-group textarea,
+.form-group input[type="number"] {
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+    border: none;
+    color: #ffffff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+
+
+.form-group input[type="text"]::placeholder,
+.form-group textarea::placeholder,
+.form-group input[type="number"]::placeholder {
+    color: #ccc;
 }
 
 .form-group textarea {
-    width: 100%;
-    height: 120px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    padding: 10px;
+    height: 110px;
     resize: none;
-    font-size: 14px;
+    line-height: 1.6;
 }
 
 .char-count {
-    font-size: 12px;
-    color: #aaa;
+    font-size: 11px;
+    color: #ccc;
     text-align: right;
-    display: block;
-    margin-top: 4px;
+    margin-top: -4px;
 }
 
-/* Cover */
-.cover-placeholder {
-    height: 120px;
-    border-radius: 8px;
-    border: 1px dashed #ddd;
+/* ─── Row (Music + Hashtag) ───────────────────────── */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+/* ─── Debug Panel ─────────────────────────────────── */
+.debug-panel {
+    background: #f7f7f7;
+    border: 1px solid #efefef;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: #bbb;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.debug-panel strong {
+    color: #ccc;
+    display: block;
+    margin-bottom: 4px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.debug-item {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 6px;
     color: #aaa;
-    font-size: 13px;
 }
 
-/* Actions */
+.debug-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.debug-dot.ok {
+    background: #25c4be;
+    box-shadow: 0 0 5px rgba(37, 196, 190, 0.5);
+}
+
+.debug-dot.no {
+    background: #ddd;
+}
+
+/* ─── Actions ─────────────────────────────────────── */
 .upload-actions {
     margin-top: auto;
     display: flex;
-    justify-content: flex-end;
     gap: 12px;
+    justify-content: flex-end;
 }
 
 .btn-outline {
-    padding: 10px 18px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    background: #fff;
+    padding: 11px 22px;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    background: transparent;
+    color: #aaa;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-outline:hover:not(:disabled) {
+    border-color: #ff4444;
+    color: #ff4444;
+}
+
+.btn-outline:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
 }
 
 .btn-primary {
-    padding: 10px 18px;
-    border-radius: 8px;
+    padding: 11px 26px;
+    border-radius: 10px;
     border: none;
-    background: #ff0050;
+    background: #fe2c55;
     color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
     cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(254, 44, 85, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary.story-btn {
+    background: linear-gradient(135deg, #25f4ee, #fe2c55);
+    box-shadow: 0 4px 16px rgba(37, 244, 238, 0.15), 0 4px 16px rgba(254, 44, 85, 0.15);
+}
+
+.btn-primary:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(254, 44, 85, 0.4);
+}
+
+.btn-primary:disabled {
+    background: #eee;
+    color: #bbb;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Loading shimmer on primary btn */
+.btn-primary.uploading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+    animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+    to {
+        left: 125%;
+    }
+}
+
+/* ─── Note Banner ─────────────────────────────────── */
+.upload-note {
+    background: rgba(37, 244, 238, 0.04);
+    border: 1px solid rgba(37, 196, 190, 0.15);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: #aaa;
+    line-height: 1.7;
+}
+
+.upload-note strong {
+    color: #25c4be;
+}
+
+/* ─── Auth Loading ────────────────────────────────── */
+.auth-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: #f8f8f8;
+    color: #aaa;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    gap: 10px;
+}
+
+.auth-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #eee;
+    border-top-color: #fe2c55;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ─── Responsive ──────────────────────────────────── */
+@media (max-width: 720px) {
+    .upload-card {
+        grid-template-columns: 1fr;
+    }
+
+    .upload-dropzone-col {
+        border-right: none;
+        border-bottom: 1px solid #efefef;
+        min-height: 300px;
+    }
+
+    .upload-dropzone {
+        height: 240px;
+    }
+
+    .upload-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
 }

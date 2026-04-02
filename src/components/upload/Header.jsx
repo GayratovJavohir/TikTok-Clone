@@ -22,7 +22,7 @@ export default function Header() {
     const token = localStorage.getItem("access_token");
     if (!token) return;
 
-    fetch("https://tiktok-clone-backend-hb85.onrender.com/users/profile/", {
+    fetch("http://135.136.181.116/users/profile/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +57,7 @@ export default function Header() {
     profile?.avatar && profile.avatar.trim() !== ""
       ? profile.avatar.startsWith("http")
         ? profile.avatar
-        : `https://tiktok-clone-backend-hb85.onrender.com${profile.avatar}`
+        : `http://135.136.181.116${profile.avatar}`
       : Profile_Pic;
 
 

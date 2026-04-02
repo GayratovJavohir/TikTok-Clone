@@ -63,7 +63,7 @@ export default function Friends() {
 
         try {
             const res = await axios.post(
-                "https://tiktok-clone-backend-hb85.onrender.com/posts/comments/",
+                "http://135.136.181.116/posts/comments/",
                 {
                     post_id: currentPost.id,
                     text: fake.text
@@ -123,7 +123,7 @@ export default function Friends() {
 
         try {
             const res = await axios.post(
-                "https://tiktok-clone-backend-hb85.onrender.com/posts/reply_comments/",
+                "http://135.136.181.116/posts/reply_comments/",
                 {
                     parent_comment: commentId,
                     text: textWithMention
@@ -183,7 +183,7 @@ export default function Friends() {
             const token = localStorage.getItem("access_token")
 
             const res = await axios.get(
-                "https://tiktok-clone-backend-hb85.onrender.com/posts/friends/",
+                "http://135.136.181.116/posts/friends/",
                 {
                     headers: token
                         ? { Authorization: `Bearer ${token}` }
@@ -203,7 +203,7 @@ export default function Friends() {
                     id: post.author?.id,
                     username: `${post.author?.first_name} ${post.author?.last_name}`,
                     avatar: post.author?.avatar
-                        ? `https://tiktok-clone-backend-hb85.onrender.com${post.author.avatar}`
+                        ? `http://135.136.181.116/${post.author.avatar}`
                         : null,
                 },
                 likes: post.likes_count,
@@ -345,7 +345,7 @@ export default function Friends() {
 
         try {
             const res = await axios.post(
-                `https://tiktok-clone-backend-hb85.onrender.com/posts/posts/${postId}/like_toggle/`,
+                `http://135.136.181.116/posts/posts/${postId}/like_toggle/`,
                 {},
                 {
                     headers: { Authorization: `Bearer ${token}` }
@@ -387,7 +387,7 @@ export default function Friends() {
 
         try {
             const res = await axios.post(
-                `https://tiktok-clone-backend-hb85.onrender.com/posts/posts/${postId}/save_toggle/`,
+                `http://135.136.181.116/posts/posts/${postId}/save_toggle/`,
                 {},
                 {
                     headers: { Authorization: `Bearer ${token}` }
@@ -418,7 +418,7 @@ export default function Friends() {
             const token = localStorage.getItem("access_token")
 
             const res = await axios.get(
-                `https://tiktok-clone-backend-hb85.onrender.com/posts/comments/?post=${postId}`,
+                `http://135.136.181.116/posts/comments/?post=${postId}`,
                 {
                     headers: token ? { Authorization: `Bearer ${token}` } : {}
                 }
@@ -472,7 +472,7 @@ export default function Friends() {
 
         try {
             const res = await axios.post(
-                `https://tiktok-clone-backend-hb85.onrender.com/posts/reply_comments/${replyId}/like_toggle/`,
+                `http://135.136.181.116/posts/reply_comments/${replyId}/like_toggle/`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             )
@@ -540,7 +540,7 @@ export default function Friends() {
 
         try {
             const res = await axios.post(
-                `https://tiktok-clone-backend-hb85.onrender.com/posts/comments/${commentId}/like_toggle/`,
+                `http://135.136.181.116/posts/comments/${commentId}/like_toggle/`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             )
@@ -654,7 +654,7 @@ export default function Friends() {
                         <div className="comment-list">
                             {comments.map(c => {
                                 const avatarUrl = c.user.avatar
-                                    ? `https://tiktok-clone-backend-hb85.onrender.com${c.user.avatar}`
+                                    ? `http://135.136.181.116${c.user.avatar}`
                                     : `https://i.pravatar.cc/150?img=${(c.user.id % 10) + 1}`
 
                                 const formattedDate = c.created_at
@@ -807,7 +807,7 @@ export default function Friends() {
                                             <div style={{ marginLeft: "48px", marginTop: "12px" }}>
                                                 {c.reply_comments.map(reply => {
                                                     const replyAvatarUrl = reply.user.avatar
-                                                        ? `https://tiktok-clone-backend-hb85.onrender.com${reply.user.avatar}`
+                                                        ? `http://135.136.181.116${reply.user.avatar}`
                                                         : `https://i.pravatar.cc/150?img=${(reply.user.id % 10) + 1}`
 
                                                     const replyFormattedDate = reply.created_at

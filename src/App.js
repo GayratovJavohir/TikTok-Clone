@@ -36,6 +36,7 @@ function App() {
         <Route path="/following" element={<Following />} />
         <Route path="/friends" element={<Friends />} />
         <Route path="/messages" element={<Messages />} />
+        <Route path="/messages/:userId" element={<Messages />} />
       </Routes>
     </Router>
   )

@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../../styles/upload/studioUpload.css";
 
-const API_BASE = "https://tiktok-clone-backend-hb85.onrender.com";
+const API_BASE = "http://135.136.181.116";
 
 export default function StudioUpload() {
     const navigate = useNavigate();
@@ -15,29 +15,21 @@ export default function StudioUpload() {
     const [uploading, setUploading] = useState(false);
     const [mediaPreview, setMediaPreview] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-    const [uploadType, setUploadType] = useState("post"); // post | story
-
+    const [uploadType, setUploadType] = useState("post");
     const [musicId, setMusicId] = useState("");
     const [hashtagId, setHashtagId] = useState("");
 
     useEffect(() => {
         const token = localStorage.getItem("access_token");
-
         if (!token) {
             alert("Iltimos, avval tizimga kiring!");
             navigate("/login");
             return;
         }
-
         setIsAuthenticated(true);
 
         return () => {
-            if (
-                mediaPreview &&
-                typeof mediaPreview === "string" &&
-                mediaPreview.startsWith("blob:")
-            ) {
+            if (mediaPreview?.startsWith?.("blob:")) {
                 URL.revokeObjectURL(mediaPreview);
             }
         };
@@ -47,13 +39,7 @@ export default function StudioUpload() {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        if (
-            mediaPreview &&
-            typeof mediaPreview === "string" &&
-            mediaPreview.startsWith("blob:")
-        ) {
-            URL.revokeObjectURL(mediaPreview);
-        }
+        if (mediaPreview?.startsWith?.("blob:")) URL.revokeObjectURL(mediaPreview);
 
         setMediaFile(file);
 
@@ -67,145 +53,77 @@ export default function StudioUpload() {
     };
 
     const handleDiscard = () => {
-        if (
-            mediaPreview &&
-            typeof mediaPreview === "string" &&
-            mediaPreview.startsWith("blob:")
-        ) {
-            URL.revokeObjectURL(mediaPreview);
-        }
-
+        if (mediaPreview?.startsWith?.("blob:")) URL.revokeObjectURL(mediaPreview);
         setMediaFile(null);
         setTitle("");
         setCaption("");
         setMusicId("");
         setHashtagId("");
         setMediaPreview(null);
-
-        if (fileInputRef.current) {
-            fileInputRef.current.value = "";
-        }
+        if (fileInputRef.current) fileInputRef.current.value = "";
     };
 
     const buildFormData = () => {
         const fd = new FormData();
-
-        if (mediaFile?.type?.startsWith("image/")) {
-            fd.append("image", mediaFile);
-        } else if (mediaFile?.type?.startsWith("video/")) {
-            fd.append("video", mediaFile);
-        }
+        if (mediaFile?.type?.startsWith("image/")) fd.append("image", mediaFile);
+        else if (mediaFile?.type?.startsWith("video/")) fd.append("video", mediaFile);
 
         if (uploadType === "post") {
             fd.append("title", title.trim());
             fd.append("caption", caption.trim());
-
-            if (musicId?.toString().trim()) {
-                fd.append("music", musicId);
-            }
-
-            if (hashtagId?.toString().trim()) {
-                fd.append("hashtag", hashtagId);
-            }
+            if (musicId?.toString().trim()) fd.append("music", musicId);
+            if (hashtagId?.toString().trim()) fd.append("hashtag", hashtagId);
         }
-
         return fd;
     };
 
-    const getEndpoint = () => {
-        return uploadType === "story"
+    const getEndpoint = () =>
+        uploadType === "story"
             ? `${API_BASE}/posts/stories/`
             : `${API_BASE}/posts/posts/`;
-    };
 
     const validateBeforeUpload = () => {
-        if (!isAuthenticated) {
-            alert("Iltimos, avval tizimga kiring!");
-            navigate("/login");
-            return false;
-        }
-
-        if (!mediaFile) {
-            alert("Iltimos, rasm yoki video tanlang!");
-            return false;
-        }
-
-        if (uploadType === "post" && !title.trim()) {
-            alert("Iltimos, post uchun sarlavha kiriting!");
-            return false;
-        }
-
+        if (!isAuthenticated) { alert("Iltimos, avval tizimga kiring!"); navigate("/login"); return false; }
+        if (!mediaFile) { alert("Iltimos, rasm yoki video tanlang!"); return false; }
+        if (uploadType === "post" && !title.trim()) { alert("Iltimos, post uchun sarlavha kiriting!"); return false; }
         return true;
     };
 
     const handleUpload = async () => {
         if (!validateBeforeUpload()) return;
-
         const token = localStorage.getItem("access_token");
-        if (!token) {
-            alert("Token topilmadi, qayta login qiling.");
-            navigate("/login");
-            return;
-        }
+        if (!token) { alert("Token topilmadi, qayta login qiling."); navigate("/login"); return; }
 
         try {
             setUploading(true);
-
             const formData = buildFormData();
             const url = getEndpoint();
-
-            console.log("🚀 Upload:", uploadType, url);
-            console.log("📊 FormData:");
-            for (const [k, v] of formData.entries()) {
-                console.log(k, v instanceof File ? `${v.name} (${v.type})` : v);
-            }
-
             const response = await axios.post(url, formData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                headers: { Authorization: `Bearer ${token}` },
             });
-
             console.log("✅ Success:", response.data);
-            alert(
-                `✅ ${uploadType === "story" ? "Story" : "Post"} muvaffaqiyatli yuklandi!`
-            );
+            alert(`✅ ${uploadType === "story" ? "Story" : "Post"} muvaffaqiyatli yuklandi!`);
             handleDiscard();
         } catch (error) {
             console.error("❌ Error:", error);
-
             if (error.response) {
-                console.error("Status:", error.response.status);
-                console.error("Data:", error.response.data);
-
                 let msg = "Yuklashda xatolik:\n";
-
-                if (
-                    typeof error.response.data === "object" &&
-                    error.response.data !== null
-                ) {
+                if (typeof error.response.data === "object" && error.response.data !== null) {
                     for (const [k, v] of Object.entries(error.response.data)) {
                         msg += `${k}: ${Array.isArray(v) ? v.join(", ") : v}\n`;
                     }
                 } else {
                     msg += error.response.data || `Status: ${error.response.status}`;
                 }
-
                 alert(msg);
-
-                if (error.response.status === 401 || error.response.status === 403) {
+                if ([401, 403].includes(error.response.status)) {
                     alert("Sessiya tugadi. Qayta login qiling.");
                     localStorage.removeItem("access_token");
                     localStorage.removeItem("refresh_token");
                     navigate("/login");
                 }
             } else if (error.request) {
-                alert(
-                    "Serverga ulana olmadik.\n" +
-                    "1) Backend server ishlayaptimi?\n" +
-                    "2) CORS to'g'rimi?\n" +
-                    "3) Network bormi?"
-                );
+                alert("Serverga ulana olmadik.\n1) Backend ishlayaptimi?\n2) CORS to'g'rimi?\n3) Network bormi?");
             } else {
                 alert("Noma'lum xatolik: " + error.message);
             }
@@ -216,283 +134,210 @@ export default function StudioUpload() {
 
     if (!isAuthenticated) {
         return (
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: "100vh",
-                    fontSize: 18,
-                }}
-            >
-                🔐 Authentication tekshirilmoqda...
+            <div className="auth-loading">
+                <div className="auth-spinner" />
+                Authentication tekshirilmoqda...
             </div>
         );
     }
 
     const isPost = uploadType === "post";
+    const hasFile = !!mediaFile;
+    const token = localStorage.getItem("access_token");
+    const canUpload = !uploading && hasFile && (isPost ? !!title.trim() : true);
 
     return (
-        <div style={{ maxWidth: 600, margin: "0 auto", padding: 20 }}>
-            <h2 style={{ textAlign: "center", marginBottom: 30 }}>
-                {isPost ? "🎬 Post Yaratish" : "⏳ Story Yaratish"}
-            </h2>
+        <div className="studio-upload">
 
-            <div style={{ marginBottom: 20, display: "flex", gap: 10 }}>
-                <button
-                    onClick={() => setUploadType("post")}
-                    style={{
-                        padding: "8px 16px",
-                        background: isPost ? "#007bff" : "#eee",
-                        color: isPost ? "#fff" : "#000",
-                        border: "none",
-                        borderRadius: 6,
-                        cursor: "pointer",
-                    }}
-                >
-                    📌 Post
-                </button>
+            {/* ── Header ── */}
+            <div className="upload-header">
+                <h2 className="upload-title">
+                    <span className="logo-dot" />
+                    {isPost ? "Post Yaratish" : "Story Yaratish"}
+                </h2>
 
-                <button
-                    onClick={() => setUploadType("story")}
-                    style={{
-                        padding: "8px 16px",
-                        background: !isPost ? "#ff0050" : "#eee",
-                        color: !isPost ? "#fff" : "#000",
-                        border: "none",
-                        borderRadius: 6,
-                        cursor: "pointer",
-                    }}
-                >
-                    ⏳ Story
-                </button>
+                <div className="type-toggle">
+                    <button
+                        onClick={() => setUploadType("post")}
+                        className={isPost ? "active-post" : ""}
+                    >
+                        📌 Post
+                    </button>
+                    <button
+                        onClick={() => setUploadType("story")}
+                        className={!isPost ? "active-story" : ""}
+                    >
+                        ⏳ Story
+                    </button>
+                </div>
             </div>
 
-            <div
-                style={{
-                    backgroundColor: "white",
-                    padding: 20,
-                    borderRadius: 10,
-                    boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
-                }}
-            >
-                <div style={{ marginBottom: 20 }}>
-                    <label
-                        style={{ display: "block", marginBottom: 8, fontWeight: "bold" }}
+            {/* ── Card ── */}
+            <div className="upload-card">
+
+                {/* LEFT — Dropzone */}
+                <div className="upload-dropzone-col">
+                    <div
+                        className={`upload-dropzone ${hasFile ? "has-file" : ""}`}
+                        onClick={() => !hasFile && fileInputRef.current?.click()}
                     >
-                        Fayl tanlash *
-                    </label>
+                        {!hasFile ? (
+                            <div className="upload-area">
+                                <div className="upload-icon-wrap">
+                                    <span className="upload-icon">🎬</span>
+                                </div>
+                                <p className="upload-main-text">Fayl tanlang yoki tashlang</p>
+                                <p className="upload-sub-text">
+                                    MP4, WebM, MOV, JPG, PNG
+                                    <span className="upload-hint">Maksimal hajm: 500 MB</span>
+                                </p>
+                                <button className="select-btn" onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}>
+                                    Fayl tanlash
+                                </button>
+                            </div>
+                        ) : mediaPreview === "video" ? (
+                            <div className="video-badge">
+                                <span>🎞️</span>
+                                <span>Video yuklangan</span>
+                            </div>
+                        ) : (
+                            <img className="img-preview" src={mediaPreview} alt="preview" />
+                        )}
+                    </div>
+
+                    {/* File info */}
+                    {hasFile && (
+                        <div className="file-info-badge">
+                            <span>📁</span>
+                            <span className="file-name">{mediaFile.name}</span>
+                            <span style={{ color: "#555", flexShrink: 0 }}>
+                                {(mediaFile.size / 1024).toFixed(1)} KB
+                            </span>
+                        </div>
+                    )}
+
+                    {hasFile && (
+                        <button
+                            className="select-btn"
+                            style={{ marginTop: 14, background: "#1e1e1e", boxShadow: "none", border: "1px solid #2a2a2a", color: "#888", width: "100%" }}
+                            onClick={() => fileInputRef.current?.click()}
+                        >
+                            Faylni almashtirish
+                        </button>
+                    )}
 
                     <input
                         ref={fileInputRef}
                         type="file"
                         accept="image/*,video/*"
                         onChange={handleMediaChange}
-                        style={{
-                            width: "100%",
-                            padding: 10,
-                            border: `2px dashed ${isPost ? "#007bff" : "#ff0050"}`,
-                            borderRadius: 8,
-                            cursor: "pointer",
-                        }}
+                        style={{ display: "none" }}
                     />
-
-                    {mediaFile && (
-                        <p style={{ marginTop: 10, color: "#666" }}>
-                            ✅ Tanlangan: {mediaFile.name} (
-                            {(mediaFile.size / 1024).toFixed(1)} KB)
-                        </p>
-                    )}
-
-                    {mediaPreview && (
-                        <div style={{ marginTop: 12 }}>
-                            {mediaPreview === "video" ? (
-                                <p style={{ color: "#666" }}>
-                                    🎞️ Video tanlandi (preview yo‘q)
-                                </p>
-                            ) : (
-                                <img
-                                    src={mediaPreview}
-                                    alt="preview"
-                                    style={{
-                                        width: "100%",
-                                        maxHeight: 320,
-                                        objectFit: "cover",
-                                        borderRadius: 10,
-                                    }}
-                                />
-                            )}
-                        </div>
-                    )}
                 </div>
 
-                {isPost && (
-                    <>
-                        <div style={{ marginBottom: 20 }}>
-                            <label
-                                style={{ display: "block", marginBottom: 8, fontWeight: "bold" }}
-                            >
-                                Sarlavha *
-                            </label>
-                            <input
-                                type="text"
-                                placeholder="Post sarlavhasi..."
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                style={{
-                                    width: "100%",
-                                    padding: 12,
-                                    border: "1px solid #ddd",
-                                    borderRadius: 6,
-                                    fontSize: 16,
-                                }}
-                            />
-                        </div>
+                {/* RIGHT — Settings */}
+                <div className="upload-settings-col">
 
-                        <div style={{ marginBottom: 20 }}>
-                            <label
-                                style={{ display: "block", marginBottom: 8, fontWeight: "bold" }}
-                            >
-                                Izoh
-                            </label>
-                            <textarea
-                                placeholder="Izoh..."
-                                value={caption}
-                                onChange={(e) => setCaption(e.target.value)}
-                                style={{
-                                    width: "100%",
-                                    padding: 12,
-                                    border: "1px solid #ddd",
-                                    borderRadius: 6,
-                                    minHeight: 100,
-                                    fontSize: 16,
-                                    resize: "vertical",
-                                }}
-                            />
-                        </div>
+                    {isPost && (
+                        <>
+                            <div className="form-group">
+                                <label>Sarlavha *</label>
+                                <input
+                                    type="text"
+                                    placeholder="Post uchun sarlavha..."
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    maxLength={150}
+                                />
+                                <span className="char-count">{title.length} / 150</span>
+                            </div>
 
-                        <div
-                            style={{
-                                display: "grid",
-                                gridTemplateColumns: "1fr 1fr",
-                                gap: 15,
-                                marginBottom: 20,
-                            }}
+                            <div className="form-group">
+                                <label>Izoh</label>
+                                <textarea
+                                    placeholder="Bu post haqida qisqacha..."
+                                    value={caption}
+                                    onChange={(e) => setCaption(e.target.value)}
+                                    maxLength={500}
+                                />
+                                <span className="char-count">{caption.length} / 500</span>
+                            </div>
+
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label>Music ID</label>
+                                    <input
+                                        type="number"
+                                        placeholder="Optional"
+                                        value={musicId}
+                                        onChange={(e) => setMusicId(e.target.value)}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Hashtag ID</label>
+                                    <input
+                                        type="number"
+                                        placeholder="Optional"
+                                        value={hashtagId}
+                                        onChange={(e) => setHashtagId(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                        </>
+                    )}
+
+                    {/* Debug */}
+                    <div className="debug-panel">
+                        <strong>Debug</strong>
+                        <div className="debug-item">
+                            <div className={`debug-dot ${token ? "ok" : "no"}`} />
+                            <span>Token: {token ? "Mavjud" : "Yo'q"}</span>
+                        </div>
+                        <div className="debug-item">
+                            <div className={`debug-dot ${hasFile ? "ok" : "no"}`} />
+                            <span>Fayl: {hasFile ? mediaFile.name : "tanlanmagan"}</span>
+                        </div>
+                        {isPost && (
+                            <div className="debug-item">
+                                <div className={`debug-dot ${title ? "ok" : "no"}`} />
+                                <span>Sarlavha: {title || "kiritilmagan"}</span>
+                            </div>
+                        )}
+                        <div className="debug-item">
+                            <div className="debug-dot ok" style={{ background: "#555" }} />
+                            <span>Endpoint: {isPost ? "/posts/posts/" : "/posts/stories/"}</span>
+                        </div>
+                    </div>
+
+                    {/* Note */}
+                    <div className="upload-note">
+                        <strong>Eslatma:</strong><br />
+                        Story uchun faqat <strong style={{ color: "#25f4ee" }}>fayl</strong> yetarli — 24 soatdan keyin avtomatik o'chadi.<br />
+                        Post uchun <strong style={{ color: "#fe2c55" }}>fayl + sarlavha</strong> majburiy.
+                    </div>
+
+                    {/* Actions */}
+                    <div className="upload-actions">
+                        <button
+                            className="btn-outline"
+                            onClick={handleDiscard}
+                            disabled={uploading}
                         >
-                            <div>
-                                <label style={{ display: "block", marginBottom: 8 }}>
-                                    Music ID
-                                </label>
-                                <input
-                                    type="number"
-                                    placeholder="Optional"
-                                    value={musicId}
-                                    onChange={(e) => setMusicId(e.target.value)}
-                                    style={{
-                                        width: "100%",
-                                        padding: 10,
-                                        border: "1px solid #ddd",
-                                        borderRadius: 6,
-                                    }}
-                                />
-                            </div>
+                            Bekor qilish
+                        </button>
+                        <button
+                            className={`btn-primary${!isPost ? " story-btn" : ""}${uploading ? " uploading" : ""}`}
+                            onClick={handleUpload}
+                            disabled={!canUpload}
+                        >
+                            {uploading
+                                ? "⏳ Yuklanmoqda..."
+                                : isPost
+                                    ? "🚀 Postni Joylash"
+                                    : "🚀 Story Joylash"}
+                        </button>
+                    </div>
 
-                            <div>
-                                <label style={{ display: "block", marginBottom: 8 }}>
-                                    Hashtag ID
-                                </label>
-                                <input
-                                    type="number"
-                                    placeholder="Optional"
-                                    value={hashtagId}
-                                    onChange={(e) => setHashtagId(e.target.value)}
-                                    style={{
-                                        width: "100%",
-                                        padding: 10,
-                                        border: "1px solid #ddd",
-                                        borderRadius: 6,
-                                    }}
-                                />
-                            </div>
-                        </div>
-                    </>
-                )}
-
-                <div
-                    style={{
-                        backgroundColor: "#f8f9fa",
-                        padding: 15,
-                        borderRadius: 8,
-                        marginBottom: 20,
-                        fontSize: 14,
-                    }}
-                >
-                    <p><strong>Debug:</strong></p>
-                    <p>🔑 Token: {localStorage.getItem("access_token") ? "✅" : "❌"}</p>
-                    <p>📁 File: {mediaFile ? "✅" : "❌"}</p>
-                    {isPost && <p>🏷️ Title: {title ? "✅" : "❌"}</p>}
-                    <p>🔗 Endpoint: {isPost ? "/posts/posts/" : "/posts/stories/"}</p>
-                </div>
-
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <button
-                        onClick={handleDiscard}
-                        disabled={uploading}
-                        style={{
-                            padding: "12px 24px",
-                            backgroundColor: "transparent",
-                            border: "2px solid #ff4444",
-                            color: "#ff4444",
-                            borderRadius: 6,
-                            cursor: uploading ? "not-allowed" : "pointer",
-                            opacity: uploading ? 0.5 : 1,
-                        }}
-                    >
-                        Bekor qilish
-                    </button>
-
-                    <button
-                        onClick={handleUpload}
-                        disabled={uploading || !mediaFile || (isPost && !title.trim())}
-                        style={{
-                            padding: "12px 24px",
-                            backgroundColor: uploading
-                                ? "#ccc"
-                                : !mediaFile || (isPost && !title.trim())
-                                    ? "#95c7ff"
-                                    : isPost
-                                        ? "#007bff"
-                                        : "#ff0050",
-                            color: "white",
-                            border: "none",
-                            borderRadius: 6,
-                            cursor:
-                                !mediaFile || (isPost && !title.trim())
-                                    ? "not-allowed"
-                                    : "pointer",
-                            fontWeight: "bold",
-                        }}
-                    >
-                        {uploading
-                            ? "⏳ Yuklanmoqda..."
-                            : isPost
-                                ? "🚀 Postni Joylash"
-                                : "🚀 Story Joylash"}
-                    </button>
-                </div>
-
-                <div
-                    style={{
-                        marginTop: 20,
-                        padding: 10,
-                        backgroundColor: "#e6f3ff",
-                        borderRadius: 6,
-                        fontSize: 14,
-                    }}
-                >
-                    <p><strong>Eslatma:</strong></p>
-                    <p>• Story uchun faqat <strong>fayl</strong> yetadi (24 soatga avtomatik)</p>
-                    <p>• Post uchun <strong>Fayl + Sarlavha</strong> majburiy</p>
                 </div>
             </div>
         </div>
