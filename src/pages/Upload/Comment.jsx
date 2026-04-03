@@ -33,7 +33,7 @@ export default function Comment() {
         }
 
         try {
-            const res = await fetch("https://exemption-housewives-channels-stopped.trycloudflare.com/users/profile/", {
+            const res = await fetch("https://fiscal-convert-tension-electronics.trycloudflare.com/users/profile/", {
                 headers: {
                     "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json"
@@ -65,7 +65,7 @@ export default function Comment() {
     // Like comment (o'zgarmadi)
     const handleLikeComment = async (commentId) => {
         try {
-            await fetch(`https://exemption-housewives-channels-stopped.trycloudflare.com/posts/comments/${commentId}/like_toggle/`, {
+            await fetch(`https://fiscal-convert-tension-electronics.trycloudflare.com/posts/comments/${commentId}/like_toggle/`, {
                 method: "POST",
                 headers: { "Authorization": `Bearer ${token}` }
             });
@@ -78,7 +78,7 @@ export default function Comment() {
     // Like reply (o'zgarmadi)
     const handleLikeReply = async (replyId) => {
         try {
-            await fetch(`https://exemption-housewives-channels-stopped.trycloudflare.com/posts/comments/${replyId}/like_toggle/`, {
+            await fetch(`https://fiscal-convert-tension-electronics.trycloudflare.com/posts/comments/${replyId}/like_toggle/`, {
                 method: "POST",
                 headers: { "Authorization": `Bearer ${token}` }
             });
@@ -157,7 +157,7 @@ export default function Comment() {
                         <div key={comment.id} className="single-comment-wrapper">
                             <div className="comment-left-side">
                                 <img
-                                    src={comment.user?.avatar ? `https://exemption-housewives-channels-stopped.trycloudflare.com${comment.user.avatar}` : "https://via.placeholder.com/40"}
+                                    src={comment.user?.avatar ? `https://fiscal-convert-tension-electronics.trycloudflare.com${comment.user.avatar}` : "https://via.placeholder.com/40"}
                                     alt={comment.user?.username}
                                     className="user-profile-pic"
                                 />
@@ -197,7 +197,7 @@ export default function Comment() {
                                             {comment.reply_comments.map(reply => (
                                                 <div key={reply.id} className="single-reply-item">
                                                     <img
-                                                        src={reply.user?.avatar ? `https://exemption-housewives-channels-stopped.trycloudflare.com${reply.user.avatar}` : "https://via.placeholder.com/32"}
+                                                        src={reply.user?.avatar ? `https://fiscal-convert-tension-electronics.trycloudflare.com${reply.user.avatar}` : "https://via.placeholder.com/32"}
                                                         alt={reply.user?.username}
                                                         className="reply-user-pic"
                                                     />
@@ -229,13 +229,13 @@ export default function Comment() {
                                 <div className="post-preview-box">
                                     {comment.post.video ? (
                                         <video
-                                            src={`https://exemption-housewives-channels-stopped.trycloudflare.com${comment.post.video}`}
+                                            src={`https://fiscal-convert-tension-electronics.trycloudflare.com${comment.post.video}`}
                                             className="post-media-preview"
                                             muted
                                         />
                                     ) : comment.post.image ? (
                                         <img
-                                            src={`https://exemption-housewives-channels-stopped.trycloudflare.com${comment.post.image}`}
+                                            src={`https://fiscal-convert-tension-electronics.trycloudflare.com${comment.post.image}`}
                                             alt={comment.post.title}
                                             className="post-media-preview"
                                         />

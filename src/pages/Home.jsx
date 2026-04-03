@@ -8,7 +8,7 @@ import "../styles/pages.css"
 import { useNavigate } from "react-router-dom"
 import { useDoubleTap } from "use-double-tap"
 
-const API = "https://exemption-housewives-channels-stopped.trycloudflare.com"
+const API = "https://fiscal-convert-tension-electronics.trycloudflare.com"
 
 export default function Home() {
     const navigate = useNavigate()
@@ -60,7 +60,7 @@ export default function Home() {
             const token = localStorage.getItem("access_token")
 
             await axios.post(
-                "https://exemption-housewives-channels-stopped.trycloudflare.com/chat/messages/",
+                "https://fiscal-convert-tension-electronics.trycloudflare.com/chat/messages/",
                 {
                     room: Number(roomId),
                     text: post.caption || post.title || "Shared post",

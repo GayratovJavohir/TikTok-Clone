@@ -5,7 +5,7 @@ import axios from "axios";
 import '../styles/profile-feed.css';
 import { useNavigate } from "react-router-dom";
 
-const API_BASE = "https://exemption-housewives-channels-stopped.trycloudflare.com/";
+const API_BASE = "https://fiscal-convert-tension-electronics.trycloudflare.com/";
 
 const getMediaUrl = (filePath) => {
     if (!filePath) return null;

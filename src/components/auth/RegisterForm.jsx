@@ -19,7 +19,7 @@ export default function RegisterForm() {
     const onSubmit = async (data) => {
         setServerError("")
 
-        const response = await fetch("https://exemption-housewives-channels-stopped.trycloudflare.com/users/register/", {
+        const response = await fetch("https://fiscal-convert-tension-electronics.trycloudflare.com/users/register/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -30,7 +30,7 @@ export default function RegisterForm() {
         const result = await response.json()
 
         if (response.ok) {
-            const loginRes = await fetch("https://exemption-housewives-channels-stopped.trycloudflare.com/users/login/", {
+            const loginRes = await fetch("https://fiscal-convert-tension-electronics.trycloudflare.com/users/login/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

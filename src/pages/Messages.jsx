@@ -7,8 +7,8 @@ import '../styles/messages.css'
 import Layout from '../components/Layout'
 import { useParams, useNavigate } from 'react-router-dom'
 
-const API_BASE = 'https://exemption-housewives-channels-stopped.trycloudflare.com'
-const WS_BASE = 'ws://exemption-housewives-channels-stopped.trycloudflare.com'
+const API_BASE = 'https://fiscal-convert-tension-electronics.trycloudflare.com'
+const WS_BASE = 'ws://fiscal-convert-tension-electronics.trycloudflare.com'
 
 const parseJwt = (token) => {
     try {

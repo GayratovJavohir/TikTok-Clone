@@ -22,7 +22,7 @@ export default function Header() {
     const token = localStorage.getItem("access_token");
     if (!token) return;
 
-    fetch("https://exemption-housewives-channels-stopped.trycloudflare.com/users/profile/", {
+    fetch("https://fiscal-convert-tension-electronics.trycloudflare.com/users/profile/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +57,7 @@ export default function Header() {
     profile?.avatar && profile.avatar.trim() !== ""
       ? profile.avatar.startsWith("http")
         ? profile.avatar
-        : `https://exemption-housewives-channels-stopped.trycloudflare.com${profile.avatar}`
+        : `https://fiscal-convert-tension-electronics.trycloudflare.com${profile.avatar}`
       : Profile_Pic;
 
 

@@ -22,7 +22,7 @@ export default function LoginForm() {
             return;
         }
 
-        const response = await fetch("https://exemption-housewives-channels-stopped.trycloudflare.com/users/login/", {
+        const response = await fetch("https://fiscal-convert-tension-electronics.trycloudflare.com/users/login/", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

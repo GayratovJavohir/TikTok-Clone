@@ -63,7 +63,7 @@ export default function Following() {
 
         try {
             const res = await axios.post(
-                "https://exemption-housewives-channels-stopped.trycloudflare.com/posts/comments/",
+                "https://fiscal-convert-tension-electronics.trycloudflare.com/posts/comments/",
                 {
                     post_id: currentPost.id,
                     text: fake.text
@@ -123,7 +123,7 @@ export default function Following() {
 
         try {
             const res = await axios.post(
-                "https://exemption-housewives-channels-stopped.trycloudflare.com/posts/reply_comments/",
+                "https://fiscal-convert-tension-electronics.trycloudflare.com/posts/reply_comments/",
                 {
                     parent_comment: commentId,
                     text: textWithMention
@@ -183,7 +183,7 @@ export default function Following() {
             const token = localStorage.getItem("access_token")
 
             const res = await axios.get(
-                "https://exemption-housewives-channels-stopped.trycloudflare.com/posts/following/",
+                "https://fiscal-convert-tension-electronics.trycloudflare.com/posts/following/",
                 {
                     headers: token
                         ? { Authorization: `Bearer ${token}` }
@@ -203,7 +203,7 @@ export default function Following() {
                     id: post.author?.id,
                     username: `${post.author?.first_name} ${post.author?.last_name}`,
                     avatar: post.author?.avatar
-                        ? `https://exemption-housewives-channels-stopped.trycloudflare.com${post.author.avatar}`
+                        ? `https://fiscal-convert-tension-electronics.trycloudflare.com${post.author.avatar}`
                         : null,
                 },
                 likes: post.likes_count,
@@ -345,7 +345,7 @@ export default function Following() {
 
         try {
             const res = await axios.post(
-                `https://exemption-housewives-channels-stopped.trycloudflare.com/posts/posts/${postId}/like_toggle/`,
+                `https://fiscal-convert-tension-electronics.trycloudflare.com/posts/posts/${postId}/like_toggle/`,
                 {},
                 {
                     headers: { Authorization: `Bearer ${token}` }
@@ -387,7 +387,7 @@ export default function Following() {
 
         try {
             const res = await axios.post(
-                `https://exemption-housewives-channels-stopped.trycloudflare.com/posts/posts/${postId}/save_toggle/`,
+                `https://fiscal-convert-tension-electronics.trycloudflare.com/posts/posts/${postId}/save_toggle/`,
                 {},
                 {
                     headers: { Authorization: `Bearer ${token}` }
@@ -418,7 +418,7 @@ export default function Following() {
             const token = localStorage.getItem("access_token")
 
             const res = await axios.get(
-                `https://exemption-housewives-channels-stopped.trycloudflare.com/posts/comments/?post=${postId}`,
+                `https://fiscal-convert-tension-electronics.trycloudflare.com/posts/comments/?post=${postId}`,
                 {
                     headers: token ? { Authorization: `Bearer ${token}` } : {}
                 }
@@ -472,7 +472,7 @@ export default function Following() {
 
         try {
             const res = await axios.post(
-                `https://exemption-housewives-channels-stopped.trycloudflare.com/posts/reply_comments/${replyId}/like_toggle/`,
+                `https://fiscal-convert-tension-electronics.trycloudflare.com/posts/reply_comments/${replyId}/like_toggle/`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             )
@@ -540,7 +540,7 @@ export default function Following() {
 
         try {
             const res = await axios.post(
-                `https://exemption-housewives-channels-stopped.trycloudflare.com/posts/comments/${commentId}/like_toggle/`,
+                `https://fiscal-convert-tension-electronics.trycloudflare.com/posts/comments/${commentId}/like_toggle/`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             )
@@ -654,7 +654,7 @@ export default function Following() {
                         <div className="comment-list">
                             {comments.map(c => {
                                 const avatarUrl = c.user.avatar
-                                    ? `https://exemption-housewives-channels-stopped.trycloudflare.com${c.user.avatar}`
+                                    ? `https://fiscal-convert-tension-electronics.trycloudflare.com${c.user.avatar}`
                                     : `https://i.pravatar.cc/150?img=${(c.user.id % 10) + 1}`
 
                                 const formattedDate = c.created_at
@@ -807,7 +807,7 @@ export default function Following() {
                                             <div style={{ marginLeft: "48px", marginTop: "12px" }}>
                                                 {c.reply_comments.map(reply => {
                                                     const replyAvatarUrl = reply.user.avatar
-                                                        ? `https://exemption-housewives-channels-stopped.trycloudflare.com${reply.user.avatar}`
+                                                        ? `https://fiscal-convert-tension-electronics.trycloudflare.com${reply.user.avatar}`
                                                         : `https://i.pravatar.cc/150?img=${(reply.user.id % 10) + 1}`
 
                                                     const replyFormattedDate = reply.created_at
