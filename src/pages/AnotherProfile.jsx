@@ -37,7 +37,7 @@ export default function Profile() {
         setLoading(true);
         setSelectedPost(null);
 
-        fetch(`http://135.136.181.116/users/another-profile/${profileId}/`, {
+        fetch(`https://exemption-housewives-channels-stopped.trycloudflare.com/users/another-profile/${profileId}/`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -72,7 +72,7 @@ export default function Profile() {
         : profile?.avatar
             ? profile.avatar.startsWith("http")
                 ? profile.avatar
-                : `http://135.136.181.116${profile.avatar}`
+                : `https://exemption-housewives-channels-stopped.trycloudflare.com${profile.avatar}`
             : Profile_Pic;
 
     const handleFollow = async () => {
@@ -82,7 +82,7 @@ export default function Profile() {
         const method = isFollowing ? "DELETE" : "POST";
 
         const res = await fetch(
-            `http://135.136.181.116/users/follow/${profileId}/`,
+            `https://exemption-housewives-channels-stopped.trycloudflare.com/users/follow/${profileId}/`,
             {
                 method,
                 headers: {
@@ -125,14 +125,14 @@ export default function Profile() {
                         <div className="video-thumbnail">
                             {post.video ? (
                                 <video
-                                    src={`http://135.136.181.116${post.video}`}
+                                    src={`https://exemption-housewives-channels-stopped.trycloudflare.com${post.video}`}
                                     muted
                                     loop
                                     playsInline
                                 />
                             ) : post.image ? (
                                 <img
-                                    src={`http://135.136.181.116${post.image}`}
+                                    src={`https://exemption-housewives-channels-stopped.trycloudflare.com${post.image}`}
                                     alt={post.title}
                                 />
                             ) : (

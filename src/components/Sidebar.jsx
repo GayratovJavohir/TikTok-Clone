@@ -39,7 +39,7 @@ export default function Sidebar() {
             }
 
             const res = await axios.get(
-                `http://135.136.181.116/users/users/?search=${search}`
+                `https://exemption-housewives-channels-stopped.trycloudflare.com/users/users/?search=${search}`
             )
 
             setUsers(res.data.results || res.data || [])

@@ -19,7 +19,7 @@ export default function Studio() {
         const token = localStorage.getItem("access_token");
         if (!token) return;
 
-        fetch("http://135.136.181.116/users/profile/", {
+        fetch("https://exemption-housewives-channels-stopped.trycloudflare.com/users/profile/", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -56,7 +56,7 @@ export default function Studio() {
         profile?.avatar && profile.avatar.trim() !== ""
             ? profile.avatar.startsWith("http")
                 ? profile.avatar
-                : `http://135.136.181.116${profile.avatar}`
+                : `https://exemption-housewives-channels-stopped.trycloudflare.com${profile.avatar}`
             : Profile_Pic;
 
 
@@ -115,14 +115,14 @@ export default function Studio() {
                                     <div key={post.id} className="tiktok-post">
                                         {post.video ? (
                                             <video
-                                                src={`http://135.136.181.116${post.video}`}
+                                                src={`https://exemption-housewives-channels-stopped.trycloudflare.com${post.video}`}
                                                 muted
                                                 loop
                                                 playsInline
                                             />
                                         ) : post.image ? (
                                             <img
-                                                src={`http://135.136.181.116${post.image}`}
+                                                src={`https://exemption-housewives-channels-stopped.trycloudflare.com${post.image}`}
                                                 alt=""
                                             />
                                         ) : null}

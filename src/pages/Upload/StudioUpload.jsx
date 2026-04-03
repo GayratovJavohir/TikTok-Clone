@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../../styles/upload/studioUpload.css";
 
-const API_BASE = "http://135.136.181.116";
+const API_BASE = "https://exemption-housewives-channels-stopped.trycloudflare.com";
 
 export default function StudioUpload() {
     const navigate = useNavigate();
